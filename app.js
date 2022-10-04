@@ -43,27 +43,19 @@ app.use(passport.session());
 
 
 passport.use('admin', new LocalStrategy((username, password, callback) => {
-    console.log("Stat : ")
-    console.log(username);
     Admin.findOne({username: username, password: password}, (err, admin) => {
         if (err) {
             callback(err);
         } else {
-            console.log("Stat find: ")
-            console.log(admin);
             callback(null, admin);
         }
     });
 }));
 passport.use('user', new LocalStrategy((username, password, callback) => {
-    console.log("Stat : ")
-    console.log(username);
     User.findOne({username: username, password: password}, (err, user) => {
         if (err) {
             callback(err);
         } else {
-            console.log("Stat find: ")
-            console.log(user);
             callback(null, user);
         }
     });
@@ -84,7 +76,6 @@ passport.deserializeUser(function (serializedUser, callback) {
             target = Admin;
         }
         target.findById(serializedUser._id, function (err, user) {
-            console.log(user);
             callback(null, user);
         });
     });
@@ -121,18 +112,7 @@ const seatSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    resident: {
-        id: {
-            type: String,
-        },
-        bookingDate: {
-            type: Date,
-            default: Date.now
-        },
-        expiryDate: {
-            type: Date
-        }
-    }
+    resident: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 const userSchema = new mongoose.Schema({
     username: {
@@ -148,9 +128,17 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
     },
+    balance: {
+        type: Number,
+        default: 0
+    },
     profile: {
         firstName: String,
         lastName: String,
+        gender: {
+            type: String,
+            enum: ["male", "female"]
+        },
         dob: String,
         contact: {
             phoneNumber: String,
@@ -158,14 +146,37 @@ const userSchema = new mongoose.Schema({
         },
     },
     seat: {type: mongoose.Schema.Types.ObjectId, ref: 'Seat'},
-    subscriptionInfo:
-        {
-            bookingDate: Date,
-            expiryDate: Date,
-        }
-})
+    applications: [{type: mongoose.Schema.Types.ObjectId, ref: 'Application'}]
+});
 
 const User = mongoose.model("User", userSchema);
+const applicationSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    package: String,
+    hostel: {
+        hostelName: String,
+        roomName: String
+    },
+    payment: {
+        method: String,
+        amount: Number,
+        trxId: String
+    },
+    applicationDate: Date,
+    note: String,
+    status: {
+        type: String,
+        enum: ["draft", "pending", "accepted", "rejected", "revision"],
+        default: "pending"
+    },
+    lastSubmitDate: Date,
+    noteFromAdmin: String
+
+})
+const Application = mongoose.model("Application", applicationSchema);
 
 app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
@@ -181,7 +192,6 @@ app.get("/admin/login", (req, res) => {
 
 app.post('/admin/login', passport.authenticate('admin', {failureRedirect: '/admin/login'}), (err, req, res, next) => {
     if (err) next(err);
-    console.log('You are logged in!');
     res.redirect("/");
 });
 
@@ -201,8 +211,7 @@ app.post("/admin/register", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(result)
-            res.send("Success");
+            res.redirect("/admin/login");
         }
     });
 
@@ -210,7 +219,6 @@ app.post("/admin/register", (req, res) => {
 
 
 app.get("/user/login", (req, res) => {
-    console.log("RESULKT " + isUser(req))
     if (!isUser(req)) {
         res.render('user/login');
     } else {
@@ -220,7 +228,6 @@ app.get("/user/login", (req, res) => {
 
 app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/login'}), (err, req, res, next) => {
     if (err) next(err);
-    console.log('You are logged in!');
     res.redirect("/");
 });
 
@@ -244,8 +251,7 @@ app.post("/user/register", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(result)
-            res.send("Success");
+            res.redirect("/user/login");
         }
     });
 });
@@ -254,8 +260,8 @@ app.get("/user/profile", (req, res) => {
     if (!isUser(req)) {
         res.redirect("/user/login")
     } else {
-
-    res.render('user/profile',{user:req.user});
+        console.log(req.user);
+        res.render('user/profile', {user: req.user});
     }
 });
 
@@ -265,6 +271,7 @@ app.post("/user/profile", (req, res) => {
     } else {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
+        const gender = req.body.gender;
         const dob = req.body.dob;
         const email = req.body.email;
         const phoneNumber = req.body.phoneNumber;
@@ -273,6 +280,7 @@ app.post("/user/profile", (req, res) => {
             profile: {
                 firstName,
                 lastName,
+                gender,
                 dob,
                 email,
                 contact: {
@@ -290,6 +298,57 @@ app.post("/user/profile", (req, res) => {
     }
 });
 
+app.get("/user/apply", (req, res) => {
+    if (!isUser(req)) {
+        res.redirect("/user/login")
+    } else {
+        res.render('user/apply', {user: req.user});
+    }
+});
+
+app.post("/user/apply", (req, res) => {
+    if (!isUser(req)) {
+        res.redirect("/user/login")
+    } else {
+        const hostelName = req.body.hostelName;
+        const roomName = req.body.roomName;
+        const package = req.body.package;
+        const method = req.body.paymentMethod;
+        const amount = req.body.paymentAmount;
+        const trxId = req.body.trxId;
+        const note = req.body.note;
+        const applicationDate = new Date();
+        const lastSubmitDate = new Date();
+
+        Application.create({
+            user: req.user._id,
+            hostelName,
+            roomName,
+            package,
+            payment: {
+                method,
+                amount,
+                trxId
+            },
+            applicationDate,
+            lastSubmitDate,
+            note
+        }, (err, application) => {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(application)
+                User.findByIdAndUpdate(req.user._id, {$push: {applications: application._id}}, (err, updatedUserApplications) => {
+                    console.log(err)
+                    console.log("updatedUserApplications")
+                    console.log(updatedUserApplications)
+                    res.redirect("/")
+                })
+
+            }
+        });
+    }
+});
 
 app.listen(80, () => {
     console.log("Server Started");
