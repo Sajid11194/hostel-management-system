@@ -16,11 +16,11 @@
     "express": "^4.18.1",
     "express-session": "^1.17.3",
     "mongoose": "^6.6.4",
+    "nodemon": "^2.0.20",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.1.2"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sajid11194/hostel-management-system.git"
