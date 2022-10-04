@@ -58,10 +58,10 @@ const seatSchema = new mongoose.Schema({
 console.log("Started")
 
 const Seat = mongoose.model('Seat', seatSchema);
-// Seat.create({seatName:"A1",roomName:"A",hostelName:"XD"},(err,res)=>{
-//     cnew("XD",res._id);
-//
-// })
+Seat.create({seatName:"X1",roomName:"X",hostelName:"XD"},(err,res)=>{
+    cnew("XDXXX",res._id);
+
+})
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -98,10 +98,11 @@ const User = mongoose.model("User", userSchema);
 
 function cnew(x, id) {
     let today = new Date();
+    let password="Newp";
     today.setDate(today.getDate() + 30);
     const user = new User({
         username: "sajid" + x,
-        password: "pass",
+        password,
         email: "sajid@gmail.com",
         profile: {
             firstName: "Farhan",
@@ -125,6 +126,35 @@ function cnew(x, id) {
         console.log(res)
     })
 }
+
+const applicationSchema=new mongoose.Schema({
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    package:String,
+    requestedRoom:String,
+    validity:String,
+    payment:{
+        method:String,
+        amount:Number,
+        trxId:String
+    },
+    applicationDate:Date,
+    note:String,
+    status:{
+        type:String,
+        enum:["draft","pending","accepted","rejected","revision"],
+        default:"pending"
+    },
+    lastSubmitDate:Date,
+    noteFromAdmin:String
+
+})
+const Application = mongoose.model("Application",applicationSchema);
+
+
+
 //
 // User.findOne({username: "sajidxd"}).populate('Seat').exec((err, res) => {
 //     console.log(err);
@@ -139,6 +169,8 @@ User.findOne({title: 'sajidxd'}).populate('seat').exec(function (err, user) {
     console.log(err);
     console.log(user);
 });
+
+
 // seat.save((error,result)=>{
 //     console.log("NOW ERROR ")
 //     console.log(error);
