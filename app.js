@@ -77,6 +77,41 @@ passport.deserializeUser(function(id, callback) {
 
 });
 
+const seatSchema=new mongoose.Schema({
+    seatName:{
+        type:String,
+        required:true,
+        unique: true,
+        uppercase:true
+    },
+    roomName:{
+        type:String,
+        required:true,
+        uppercase:true
+    },
+    hostelName:{
+        type:String,
+        required:true,
+        unique: true,
+        uppercase:true
+    },
+    onService:{
+        type:Boolean,
+        default:true
+    },
+    resident:{
+        id:{
+            type:String,
+        },
+        bookingDate:{
+            type:Date,
+            default:Date.now
+        },
+        expiryDate:{
+            type:Date
+        }
+    }
+})
 
 app.get("/", (req, res) => {
     res.send(req.user);
