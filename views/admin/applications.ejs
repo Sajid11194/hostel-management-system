@@ -1,0 +1,40 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container table-responsive">
+
+    <table class="table table-striped ">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">No.</td>
+            <th scope="col">Name</td>
+            <th scope="col">Gender</td>
+            <th scope="col">Hostel</td>
+            <th scope="col">Status</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% applications.forEach((application,i)=>{ %>
+        <tr>
+            <th scope="row"><%=i%></th>
+            <td class="text-break"><%=application.user.profile.firstName%></td>
+            <td class="text-break"><%=application.user.profile.gender%></td>
+            <td class="text-break"><%=application.hostel.hostelName%></td>
+            <td class="text-break"><%=application.status%></td>
+        </tr>
+        <%})%>
+        </tbody>
+    </table>
+
+</div>
+
+<%- include('../partials/footer.ejs') %>
+
+<!--<div class="list-group">-->
+<!--    -->
+<!--    <a class="list-group-item list-group-item-action " href="#">-->
+<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
+<!--        <p>Hostel :</p>-->
+<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
+<!--            <p class="badge bg-primary">Pending</p></div>-->
+<!--    </a>-->
+<!--</div>-->

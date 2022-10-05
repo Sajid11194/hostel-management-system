@@ -12,5 +12,48 @@ app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect("mongodb://localhost:27017/hostelDB");
 
 
-console.log(new mongoose.Types.ObjectId(""));
+const applicationSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    package: String,
+    hostel: {
+        hostelName: String,
+        roomName: String
+    },
+    payment: {
+        method: String,
+        amount: Number,
+        trxId: String
+    },
+    applicationDate: Date,
+    note: String,
+    status: {
+        type: String,
+        enum: ["draft", "pending", "accepted", "rejected", "revision"],
+        default: "pending"
+    },
+    lastSubmitDate: Date,
+    noteFromAdmin: String
 
+})
+const Application = mongoose.model("Application", applicationSchema);
+
+const info=(xd)=>{
+    return {
+        user: "633c455ddfe915efc9cf44d0", hostel:{hostelName:xd+"  GG", roomName:"GG1A"}, package:"Luxury", payment: {
+        method:"Bkash", amount:"100", trxId:"HH"
+    }, applicationDate:new Date(), lastSubmitDate:new Date(), note:xd
+    }
+};
+for(let i=0;i<100;i++){
+Application.create(info(i), (err, application) => {
+    if (err) {
+        console.log(err)
+    } else {
+        console.log(application);
+
+    }
+});
+}

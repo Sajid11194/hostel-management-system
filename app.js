@@ -76,6 +76,8 @@ passport.deserializeUser(function (serializedUser, callback) {
             target = Admin;
         }
         target.findById(serializedUser._id, function (err, user) {
+            console.log("FOUND :" )
+            console.log(user)
             callback(null, user);
         });
     });
@@ -186,38 +188,6 @@ app.get("/", (req, res) => {
     }
 });
 
-app.get("/admin/login", (req, res) => {
-    res.render('admin/login');
-});
-
-app.post('/admin/login', passport.authenticate('admin', {failureRedirect: '/admin/login'}), (err, req, res, next) => {
-    if (err) next(err);
-    res.redirect("/");
-});
-
-
-app.get("/admin/register", (req, res) => {
-    res.render('admin/register');
-});
-
-app.post("/admin/register", (req, res) => {
-    const username = req.body.username.toLowerCase();
-    const password = req.body.password;
-    const admin = new Admin({
-        username,
-        password
-    });
-    admin.save((err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.redirect("/admin/login");
-        }
-    });
-
-});
-
-
 app.get("/user/login", (req, res) => {
     if (!isUser(req)) {
         res.render('user/login');
@@ -322,8 +292,8 @@ app.post("/user/apply", (req, res) => {
 
         Application.create({
             user: req.user._id,
-            hostelName,
-            roomName,
+            hostel:{hostelName,
+            roomName},
             package,
             payment: {
                 method,
@@ -352,4 +322,49 @@ app.post("/user/apply", (req, res) => {
 
 app.listen(80, () => {
     console.log("Server Started");
+});
+
+
+
+app.get("/admin/login", (req, res) => {
+    res.render('admin/login');
+});
+
+app.post('/admin/login', passport.authenticate('admin', {failureRedirect: '/admin/login'}), (err, req, res, next) => {
+    if (err) next(err);
+    res.redirect("/");
+});
+
+
+app.get("/admin/register", (req, res) => {
+    res.render('admin/register');
+});
+
+app.post("/admin/register", (req, res) => {
+    const username = req.body.username.toLowerCase();
+    const password = req.body.password;
+    const admin = new Admin({
+        username,
+        password
+    });
+    admin.save((err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.redirect("/admin/login");
+        }
+    });
+
+});
+
+
+app.get("/admin/applications", (req, res) => {
+    Application.find({}).populate('user').exec((err,applications)=>{
+        if(err){
+            console.log(err)
+        } else {
+            res.render('admin/applications',{applications});
+        }
+    })
+    ;
 });
