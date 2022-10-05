@@ -39,12 +39,13 @@ const applicationSchema = new mongoose.Schema({
 
 })
 const Application = mongoose.model("Application", applicationSchema);
+const Test = mongoose.model("Test", applicationSchema);
 
 const info=(xd)=>{
     return {
         user: "633c455ddfe915efc9cf44d0", hostel:{hostelName:xd+"  GG", roomName:"GG1A"}, package:"Luxury", payment: {
         method:"Bkash", amount:"100", trxId:"HH"
-    }, applicationDate:new Date(), lastSubmitDate:new Date(), note:xd
+    }, applicationDate:new Date(), lastSubmitDate:new Date(), note:xd,status:"rejected"
     }
 };
 for(let i=0;i<100;i++){

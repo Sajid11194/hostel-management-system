@@ -76,7 +76,7 @@ passport.deserializeUser(function (serializedUser, callback) {
             target = Admin;
         }
         target.findById(serializedUser._id, function (err, user) {
-            console.log("FOUND :" )
+            console.log("FOUND :")
             console.log(user)
             callback(null, user);
         });
@@ -116,6 +116,8 @@ const seatSchema = new mongoose.Schema({
     },
     resident: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
+
+const Seat = mongoose.model("Seat", seatSchema);
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -148,7 +150,8 @@ const userSchema = new mongoose.Schema({
         },
     },
     seat: {type: mongoose.Schema.Types.ObjectId, ref: 'Seat'},
-    applications: [{type: mongoose.Schema.Types.ObjectId, ref: 'Application'}]
+    applications: [{type: mongoose.Schema.Types.ObjectId, ref: 'Application'}],
+    package: String
 });
 
 const User = mongoose.model("User", userSchema);
@@ -171,7 +174,7 @@ const applicationSchema = new mongoose.Schema({
     note: String,
     status: {
         type: String,
-        enum: ["draft", "pending", "accepted", "rejected", "revision"],
+        enum: ["draft", "pending", "accepted", "rejected", "queue"],
         default: "pending"
     },
     lastSubmitDate: Date,
@@ -179,7 +182,14 @@ const applicationSchema = new mongoose.Schema({
 
 })
 const Application = mongoose.model("Application", applicationSchema);
-
+// app.use(/^[\/]admin($|\/).*/,(req,res,next)=>{
+//     if(isAdmin()){
+//         next();
+//     }
+//     else{
+//         res.redirect("/admin/login")
+//     }
+// })
 app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
         res.send(req.session);
@@ -292,8 +302,10 @@ app.post("/user/apply", (req, res) => {
 
         Application.create({
             user: req.user._id,
-            hostel:{hostelName,
-            roomName},
+            hostel: {
+                hostelName,
+                roomName
+            },
             package,
             payment: {
                 method,
@@ -323,7 +335,6 @@ app.post("/user/apply", (req, res) => {
 app.listen(80, () => {
     console.log("Server Started");
 });
-
 
 
 app.get("/admin/login", (req, res) => {
@@ -358,13 +369,104 @@ app.post("/admin/register", (req, res) => {
 });
 
 
-app.get("/admin/applications", (req, res) => {
-    Application.find({}).populate('user').exec((err,applications)=>{
-        if(err){
+app.get(["/admin/applications/:status", "/admin/applications/"], (req, res) => {
+    const status = req.params.status;
+    let page = req.query.p;
+    if (page < 1 || page == undefined) { //defaults to page 1
+        page = 1;
+    }
+    const limit = 9;
+    const find = {}
+    if (status != "all" && status != undefined) {
+        find.status = status; // building query, filter by status only if users wants
+    }
+    //get only 10 results and | if page 2 then skips first (2*10-10)=10 results
+    Application.find(find).skip(page * limit - limit).limit(limit).populate('user').exec((err, applications) => {
+        if (err) {
             console.log(err)
         } else {
-            res.render('admin/applications',{applications});
+            Application.count(find).exec((err, total) => {
+                const totalPage = Math.round(Number(total) / Number(limit));
+                res.render('admin/applications', {
+                    applications,
+                    stats: {total: Number(total), page: Number(page), limit: limit, totalPage: totalPage}
+                });
+            })
+
         }
     })
     ;
+});
+
+
+app.get("/admin/applications/review/:id", (req, res) => {
+    const id = req.params.id;
+    if (id == undefined) {
+        res.redirect("/admin/applications/");
+    }
+    Application.findById(id).populate('user').exec((err, application) => {
+        res.render('admin/review', {application,path:req.path})
+    })
+
+});
+app.get("/admin/applications/review/:id/:action",(req,res)=>{
+    console.log("++++++++++++++++++++++++")
+});
+app.post("/admin/applications/review/:id/:action", (req, res) => {
+    console.log(req.body)
+    const applicationId = req.params.id;
+    const applicationAction = req.params.action;
+    const message = req.body.message;
+    const seatName = req.body.seatName;
+    const package = req.body.package;
+//{status:action,lastSubmitDate:new Date(),noteFromAdmin:message},
+    if (applicationAction == "accepted") {
+        Application.findById(applicationId).populate('user').exec((errApp, application) => {
+            Seat.findOne({seatName}, (seatError, seat) => {
+                if (seat.onService) {
+                    if (seat.resident) {
+                        seat.update({resident: application.user._id}, (seatUpdateError, updatedSeat) => {
+                            if (seatUpdateError) {
+                                console.log("//seat update error");
+                            } else {
+                                User.findByIdAndUpdate(application.user._id, {seat: seat._id,package:package}, (errUser, user) => {
+                                    if (errUser) {
+                                        console.log("//user update error");
+                                    } else {
+                                        application.update({
+                                            status: applicationAction,
+                                            lastSubmitDate:new Date(),
+                                            noteFromAdmin: message
+                                        }, (appUpdateError, updatedApp) => {
+                                            if (appUpdateError) {
+                                                console.log("//app update error");
+                                            } else {
+                                                res.redirect("/admin/applications/")
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        console.log("//seat occupied");
+                    }
+                } else {
+                    console.log("//seat not on service");
+                }
+            })
+        });
+    } else {
+        Application.findByIdAndUpdate(applicationId, {
+            status: applicationAction,
+            noteFromAdmin: message
+        }, (err, application) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.redirect("/admin/applications/");
+            }
+        })
+    }
+
 });

@@ -1,7 +1,89 @@
 <html>
 <head>
     <title>Hostel Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <style>
+        @media only screen and (max-width: 767px) {
+            .table > tbody > tr > td,
+            .table > tbody > tr > th,
+            .table > tfoot > tr > td,
+            .table > tfoot > tr > th,
+            .table > thead > tr > td,
+            .table > thead > tr > th {
+                display: block;
+                min-width: 100% !important;
+            }
+
+            .table > thead > tr > th {
+                display: none;
+            }
+
+            .table > tbody > tr {
+                border-width: 5px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+        }
+    </style>
 </head>
 <body>
 
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="bg-light d-flex">
+    <div  class="px-4 bg-white d-md-block collapse" >
+        <a class="d-flex flex-left text-decoration-none display-4 text-dark mt-3" href=""><i class="fa-solid fa-square-h my-1 mx-2"></i>  Sidebar</a>
+        <hr>
+        <div class="list-group border-5">
+            <a href="#" class="list-group-item list-group-item border-0 rounded">
+                <i class="fa-solid fa-square-h my-1 mx-2"></i> Dashboard
+            </a>
+            <a href="#" class="list-group-item active rounded">
+                <i class="fa-solid fa-square-h my-1 mx-2"></i> Review Applications
+            </a>
+            <a href="#" class="list-group-item  border-0 rounded">
+                <i class="fa-solid fa-square-h my-1 mx-2"></i> Hostel Database
+            </a>
+            <a href="#" class="list-group-item  border-0 rounded">
+                <i class="fa-solid fa-square-h my-1 mx-2"></i> Add Balance
+            </a>
+        </div>
+    </div>
