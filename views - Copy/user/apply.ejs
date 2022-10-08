@@ -1,0 +1,118 @@
+<%- include("../partials/header.ejs") %>
+<%- include('../partials/navbar.ejs') %>
+
+<div class="bg-light">
+<div class="container">
+    <form class="row g-3 my-5" action="/user/apply" method="post">
+        <div class="col-md-6">
+            <label class="form-label">Hostel</label>
+            <select class="form-select" name="hostelName" required>
+                <option value="male" <% if(user.profile.gender == "male") { %>selected
+                        <% }; %>
+                >Boys Hostel
+                </option>
+                <option value="female" <% if(user.profile.gender == "female") { %>selected
+                        <% }; %>
+                >Girls Hostel
+                </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Room (Optional)</label>
+            <select class="form-select" name="roomName" required>
+                <option value="male" <% if(user.profile.gender == "male") { %>selected
+                        <% }; %>
+                >Room 101
+                </option>
+                <option value="female" <% if(user.profile.gender == "female") { %>selected
+                        <% }; %>
+                >Room 102
+                </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Package</label>
+            <select class="form-select" name="package" required>
+                <option value="standard" <% if(user.profile.gender == "male") { %>selected
+                        <% }; %>
+                >Standard
+                </option>
+                <option value="premium" <% if(user.profile.gender == "female") { %>selected
+                        <% }; %>
+                >Premium
+                </option>
+                <option value="luxury" <% if(user.profile.gender == "female") { %>selected
+                        <% }; %>
+                >Luxury
+                </option>
+            </select>
+        </div>
+        <hr class="my-5"/>
+        <h2>Advanced Payment</h2>
+        <div class="col-md-6">
+            <label class="form-label">Payment Method</label>
+            <select class="form-select" name="paymentMethod">
+                <option value="bank">Bank</option>
+                <option value="bkash">bKash</option>
+                <option value="rocket">Rocket</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Payment Amount</label>
+            <input type="number" step="500" name="paymentAmount" class="form-control" placeholder="5000">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Transaction Id</label>
+            <input type="text" name="trxId" class="form-control" placeholder="2303212165487852123132">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Leave a Message</label>
+            <input type="text" class="form-control" name="note" placeholder="Sent from bkash . Last 3 digit 350">
+        </div>
+
+        <hr class="my-5"/>
+        <h2>Applicant Info: </h2>
+        <div class="col-12 form-text text-danger">To change any of your info, update your profile.</div>
+        <div class="col-md-6">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" value="<%= user.profile.firstName %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" value="<%= user.profile.lastName %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" value="<%= user.email %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" value="<%= user.profile.contact.phoneNumber %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            <select class="form-select"  disabled>
+                <option value="male" <% if(user.profile.gender == "male") { %>selected
+                        <% }; %>
+                >Male
+                </option>
+                <option value="female" <% if(user.profile.gender == "female") { %>selected
+                        <% }; %>
+                >Female
+                </option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" name="dob" value="<%= user.profile.dob %>" disabled>
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label">Permanent Address</label>
+            <input type="text" class="form-control" value="<%= user.profile.contact.permanentAddress %>" disabled>
+        </div>
+        <button class="btn btn-success" type="submit">Save</button>
+    </form>
+</div>
+</div>
+<%- include("../partials/footer.ejs") %>

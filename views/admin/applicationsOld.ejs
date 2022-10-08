@@ -1,0 +1,59 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container table-responsive">
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">No.</td>
+            <th scope="col">Name</td>
+            <th scope="col">Gender</td>
+            <th scope="col">Hostel</td>
+            <th scope="col">Status</td>
+            <th scope="col" class="text-center">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% applications.forEach((application,i)=>{ %>
+        <tr>
+            <th scope="row"><%=i%></th>
+            <td class="text-break"><%=application.user.profile.firstName%></td>
+            <td class="text-break"><%=application.user.profile.gender%></td>
+            <td class="text-break"><%=application.hostel.hostelName%></td>
+            <td class="text-break"><%=application.status%></td>
+            <td class="text-break d-flex justify-content-around"><a class="btn btn-primary" href="./review/<%= application._id%>">View</a>
+                <a class="btn btn-success" href="./review/<%= application._id%>">Accept</a>
+                <a class="btn btn-danger" href="./review/<%= application._id%>">Reject</a></td>
+        </tr>
+        <%})%>
+
+        </tbody>
+
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item  <% if(Number(stats.page)<=1){%>disabled<%};%>">
+                <a class="page-link" href="./?p=1">First Page</a>
+            </li>
+            <% for(let i=Number(stats.page)-3;(i<Number(stats.page)+3) && (i<stats.total/10);i++){if(i<1)continue;%>
+            <li class="page-item <% if(stats.page==i){%>active<%};%>"><a class="page-link" href="./?p=<%=i%>"><%=i%></a></li>
+            <%};%>
+
+            <li class="page-item <% if(stats.page==stats.total/10){%>disabled<%};%>">
+                <a class="page-link" href="./?p=<%=stats.total/10%>">Last Page</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<%- include('../partials/footer.ejs') %>
+
+<!--<div class="list-group">-->
+<!--    -->
+<!--    <a class="list-group-item list-group-item-action " href="#">-->
+<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
+<!--        <p>Hostel :</p>-->
+<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
+<!--            <p class="badge bg-primary">Pending</p></div>-->
+<!--    </a>-->
+<!--</div>-->
