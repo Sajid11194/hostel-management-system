@@ -1,139 +1,160 @@
 <%- include("../partials/header.ejs") %>
+<%- include('../partials/navbar.ejs') %>
 
-
-<div class="row w-100 mx-5 my-5">
-    <h2>Applicant Info: </h2>
-    <div class="col-md-6">
-        <label class="form-label">First Name</label>
-        <input type="text" class="form-control" value="<%= application.user.profile.firstName %>" disabled>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Last Name</label>
-        <input type="text" class="form-control" value="<%= application.user.profile.lastName %>" disabled>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" value="<%= application.user.email %>" disabled>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" value="<%= application.user.profile.contact.phoneNumber %>" disabled>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Gender</label>
-        <select class="form-select" disabled>
-            <option value="male" <% if(application.user.profile.gender == "male") { %>selected
-                    <% }; %>
-            >Male
-            </option>
-            <option value="female" <% if(application.user.profile.gender == "female") { %>selected
-                    <% }; %>
-            >Female
-            </option>
-        </select>
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Date of Birth</label>
-        <input type="date" class="form-control" value="<%= application.user.profile.dob %>" disabled>
-    </div>
-
-    <div class="col-md-12">
-        <label class="form-label">Permanent Address</label>
-        <input type="text" class="form-control" value="<%= application.user.profile.contact.permanentAddress %>"
-               disabled>
-    </div>
-
-
-    <h2>Payment Info</h2>
-    <div class="col-md-6">
-        <label class="form-label">Payment Method</label>
-        <input type="text" class="form-control" value="<%= application.payment.method %>">
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Payment Amount</label>
-        <input type="number" step="500" class="form-control" value="<%= application.payment.amount %>">
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Transaction Id</label>
-        <input type="text" class="form-control" value="<%= application.payment.trxId %>">
-    </div>
-    <div class="col-md-6">
-        <label class="form-label">Message From User</label>
-        <input type="text" class="form-control" value="<%= application.note %>">
-    </div>
-
-    <hr class="my-5"/>
-
-    <form class="row" action="#" method="post">
+    <div>
+    <h3>Applicant Info: </h3>
+    <hr class="my-4"/>
+    <div class="row">
         <div class="col-md-6">
-            <label class="form-label">Hostel</label>
-            <select class="form-select" required>
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" value="<%= application.user.profile.firstName %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" value="<%= application.user.profile.lastName %>" disabled>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" value="<%= application.user.email %>" disabled>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" value="<%= application.user.profile.contact.phoneNumber %>" disabled>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label">Gender</label>
+            <select class="form-select" disabled>
                 <option value="male" <% if(application.user.profile.gender == "male") { %>selected
                         <% }; %>
-                >Boys Hostel
+                >Male
                 </option>
                 <option value="female" <% if(application.user.profile.gender == "female") { %>selected
                         <% }; %>
-                >Girls Hostel
+                >Female
                 </option>
             </select>
         </div>
         <div class="col-md-6">
-            <label class="form-label">Room </label>
-            <select class="form-select" required>
-                <option value="male" <% if(application.user.profile.gender == "male") { %>selected
-                        <% }; %>
-                >Room 101
-                </option>
-                <option value="female" <% if(application.user.profile.gender == "female") { %>selected
-                        <% }; %>
-                >Room 102
-                </option>
-            </select>
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" value="<%= application.user.profile.dob %>" disabled>
         </div>
-        <div class="col-md-6">
-            <label class="form-label">Seat</label>
-            <select class="form-select" name="seatName" required>
-                <option value="A1">A1
-                </option>
-                <option value="X1">X1
-                </option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Package</label>
-            <select class="form-select" name="package" required>
-                <option value="standard" <% if(application.user.profile.gender == "male") { %>selected
-                        <% }; %>
-                >Standard
-                </option>
-                <option value="premium" <% if(application.user.profile.gender == "female") { %>selected
-                        <% }; %>
-                >Premium
-                </option>
-                <option value="luxury" <% if(application.user.profile.gender == "female") { %>selected
-                        <% }; %>
-                >Luxury
-                </option>
-            </select>
-        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
-            <label class="form-label">Leave A Message</label>
-            <textarea type="text" class="form-control" name="message"></textarea>
+            <label class="form-label">Permanent Address</label>
+            <input type="text" class="form-control" value="<%= application.user.profile.contact.permanentAddress %>"
+                   disabled>
         </div>
-        <hr class="my-5">
-        <div class="button-group">
-            <button type="submit" class="btn btn-success" formmethod="post"
-                    formaction="./<%=application._id%>/accept">Accept
-            </button>
-            <button type="submit" class="btn btn-warning" formmethod="post"
-                    formaction="./<%=application._id%>/queue">Queue
-            </button>
-            <button type="submit" class="btn btn-danger" formmethod="post"
-                    formaction="./<%=application._id%>/reject">Reject
-            </button>
+    </div>
+    </div>
+    <div class="row">
 
+        <div class="col-lg-4">
+            <h2 class="mt-5">Payment</h2>
+
+            <hr class="my-3">
+            <ul class="list-group fs-5 mt-4">
+                <li class="bg-light list-group-item d-flex justify-content-between align-items-center">
+                    Method
+                    <span class="fw-semibold"><%= application.payment.method %></span>
+                </li>
+                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
+                    Amount
+                    <span class="text-success fw-semibold"><%= application.payment.amount %></span>
+                </li>
+                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
+                    <span style="min-width:60px">Trx ID</span>
+                    <span class="fw-semibold text-break"><%= application.payment.trxId %>
+</span>
+                </li>
+                <li href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <p class="mb-1">Message :</p>
+                    </div>
+                    <p class="mb-1"><%= application.note %></p>
+                </li>
+            </ul>
         </div>
-    </form></div></div>
+        <div class="col-lg-8 order-md-first">
+            <h2 class="mt-5">Enroll </h2>
 
+            <hr class="my-3">
+            <form action="#" method="post">
+                <div class="form-group">
+                <label class="form-label">Hostel</label>
+                <select class="form-select form-control" required>
+                    <option value="male" <% if(application.user.profile.gender == "male") { %>selected
+                            <% }; %>
+                    >Boys Hostel
+                    </option>
+                    <option value="female" <% if(application.user.profile.gender == "female") { %>selected
+                            <% }; %>
+                    >Girls Hostel
+                    </option>
+                </select>
+                </div>
+                <div class="form-group">
+
+                <label class="form-label">Room </label>
+                <select class="form-select" required>
+                    <option value="male" <% if(application.user.profile.gender == "male") { %>selected
+                            <% }; %>
+                    >Room 101
+                    </option>
+                    <option value="female" <% if(application.user.profile.gender == "female") { %>selected
+                            <% }; %>
+                    >Room 102
+                    </option>
+                </select>
+                </div>
+                <div class="form-group">
+                <label class="form-label">Seat</label>
+                <select class="form-select" name="seatName" required>
+                    <option value="A1">A1
+                    </option>
+                    <option value="X1">X1
+                    </option>
+                </select>
+                </div>
+                <div class="form-group">
+                <label class="form-label">Package</label>
+                <select class="form-select" name="package" required>
+                    <option value="standard" <% if(application.user.profile.gender == "male") { %>selected
+                            <% }; %>
+                    >Standard
+                    </option>
+                    <option value="premium" <% if(application.user.profile.gender == "female") { %>selected
+                            <% }; %>
+                    >Premium
+                    </option>
+                    <option value="luxury" <% if(application.user.profile.gender == "female") { %>selected
+                            <% }; %>
+                    >Luxury
+                    </option>
+                </select>
+                </div>
+                <label class="form-label">Leave A Message</label>
+                <textarea type="text" class="form-control" name="message"></textarea>
+
+                <div class="my-5 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success px-5" formmethod="post"
+                            formaction="./<%= application._id %>/accept">Accept
+                    </button>
+                    <button type="submit" class="btn btn-primary px-5  text-white" formmethod="post"
+                            formaction="./<%= application._id %>/queue">Queue
+                    </button>
+                    <button type="submit" class="btn btn-danger px-5" formmethod="post"
+                            formaction="./<%= application._id %>/rejected">Reject
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div></div>
 <%- include("../partials/footer.ejs") %>
