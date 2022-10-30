@@ -6,86 +6,38 @@ const session = require("express-session");
 const passport = require("passport");
 const MongoDBStore = require('connect-mongodb-session')(session);
 const LocalStrategy = require("passport-local");
-const app = express();
 const slashes = require("connect-slashes");
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}));
+const db = require("./schema/schema.js");
 
+//Database Schema
+const Admin = db.Admin
+const User = db.User
+const Application = db.Application
+const Hostel = db.Hostel
+const Room = db.Room
+const Seat = db.Seat
+
+//Database Connection
 mongoose.connect("mongodb://localhost:27017/hostelDB");
 const sessionStore = new MongoDBStore({
     uri: 'mongodb://localhost:27017/hostelDB',
     collection: 'session'
 });
+
+
+const app = express();
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
+
 app.use(session({
     secret: 'test gg',
     resave: false,
     saveUninitialized: false,
     store: sessionStore
 }));
-const adminSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        lowercase: true,
-    }
-})
-const Admin = new mongoose.model("Admin", adminSchema);
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-    },
-    balance: {
-        type: Number,
-        default: 0
-    },
-    profile: {
-        firstName: String,
-        lastName: String,
-        gender: {
-            type: String,
-            enum: ["male", "female"]
-        },
-        dob: String,
-        contact: {
-            phoneNumber: String,
-            permanentAddress: String
-        },
-    },
-    seat: {type: mongoose.Schema.Types.ObjectId, ref: 'Seat'},
-    applications: [{type: mongoose.Schema.Types.ObjectId, ref: 'Application'}],
-    package: String
-});
 
-const User = mongoose.model("User", userSchema);
-const roomSchema= new mongoose.Schema({
-    roomName:String,
-    seats:[{type: mongoose.Schema.Types.ObjectId, ref: 'Seat'}]
-})
-const hostelSchema = new mongoose.Schema({
-    hostelName:String,
-    address:String,
-    floors:Number,
-    rooms:[roomSchema]
-})
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -135,6 +87,7 @@ passport.deserializeUser(function (serializedUser, callback) {
 
 });
 
+
 function isUser(req) {
     return req.isAuthenticated() && (req.session.passport.user.role == "user");
 }
@@ -143,65 +96,12 @@ function isAdmin(req) {
     return req.isAuthenticated() && (req.session.passport.user.role == "admin");
 }
 
-const seatSchema = new mongoose.Schema({
-    seatName: {
-        type: String,
-        required: true,
-        unique: true,
-        uppercase: true
-    },
-    roomName: {
-        type: String,
-        required: true,
-        uppercase: true
-    },
-    hostelName: {
-        type: String,
-        required: true,
-        unique: true,
-        uppercase: true
-    },
-    onService: {
-        type: Boolean,
-        default: true
-    },
-    resident: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
-})
 
-const Seat = mongoose.model("Seat", seatSchema);
-
-const applicationSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    package: String,
-    hostel: {
-        hostelName: String,
-        roomName: String
-    },
-    payment: {
-        method: String,
-        amount: Number,
-        trxId: String
-    },
-    applicationDate: Date,
-    note: String,
-    status: {
-        type: String,
-        enum: ["draft", "pending", "accepted", "rejected", "queue"],
-        default: "pending"
-    },
-    lastSubmitDate: Date,
-    noteFromAdmin: String
-
-})
-const Application = mongoose.model("Application", applicationSchema);
 app.use((req, res, next) => {
     app.locals.global = {
         role: req.session.passport?.user.role,
         user: req?.user,
-        path:req.path
+        path: req.path
     };
 
     next()
@@ -218,14 +118,23 @@ app.use(/^[\/]user($|\/)(?!login)(?!register).*/, (req, res, next) => {
     if (isUser(req)) {
         next();
     } else {
+        console.log("XY")
+
         res.redirect("/user/login")
     }
 })
 
 app.use(slashes(false));
 
-app.get("/", (req, res) => {
 
+//Functions
+
+function bookSeat(user,seat){
+
+}
+
+app.get("/", (req, res) => {
+    res.send("<h1>Home</h1>")
 });
 
 app.get("/user/login", (req, res) => {
@@ -236,9 +145,10 @@ app.get("/user/login", (req, res) => {
     }
 });
 
-app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/login'}), (err, req, res, next) => {
+app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/loginx'}), (err, req, res, next) => {
     if (err) next(err);
-    res.redirect("/");
+    console.log("GG")
+    res.redirect("/user");
 });
 
 
@@ -357,9 +267,9 @@ app.listen(80, () => {
 app.get("/admin", (req, res) => {
     //testing if running query in parallel will reduce time or not
 
-    Promise.all([Application.find({status:"pending"}).sort({_1:1}).limit(5).populate('user'),Application.count(),User.count(),Seat.count(),Seat.count({resident:null})]).then(([applications,appCount,userCount,seatCount,emptySeatCount])=>{
-        const values={applications,stats:{appCount,userCount,seatCount,emptySeatCount}}
-        res.render('admin/dashboard',values);
+    Promise.all([Application.find({status: "pending"}).sort({_1: 1}).limit(5).populate('user'), Application.count(), User.count(), Seat.count(), Seat.count({resident: null})]).then(([applications, appCount, userCount, seatCount, emptySeatCount]) => {
+        const values = {applications, stats: {appCount, userCount, seatCount, emptySeatCount}}
+        res.render('admin/dashboard', values);
     });
 });
 
@@ -406,7 +316,113 @@ app.post("/admin/register", (req, res) => {
 
 });
 
+app.get("/admin/hostel", (req, res) => {
+    res.render('hostel')
+})
 
+app.get("/admin/hostel/add", (req, res) => {
+    Hostel.find({},(err,result)=>{
+        res.render('admin/hostel-add',{hostels:result})
+    })
+})
+
+app.post("/admin/hostel/add/hostel", (req, res) => {
+    const hostelName = req.body.hostelName;
+    const floors = req.body.floors;
+    const address = req.body.address;
+    const gender = req.body.gender;
+    const hostel = new Hostel({
+        hostelName,
+        floors,
+        address,
+        gender
+    })
+    hostel.save((err,rs)=>{
+        if(!err){
+            res.redirect("/admin/hostel/add");
+        } else {
+            console.log(err)
+        }
+    })
+})
+app.post("/admin/hostel/add/room", (req, res) => {
+    const roomName = req.body.roomName;
+    const floor = req.body.floor;
+    const hostelId = req.body.hostelName;
+    Hostel.findById(hostelId, (err, hostel) => {
+        if (!err) {
+            const room = new Room({
+                roomName,
+                floor,
+                hostelName: hostel.hostelName
+            })
+            room.save((roomerr, roomres) => {
+                if (!err) {
+                    hostel.rooms.push(roomres._id)
+                    hostel.save((hostelUpdateErr, hostelUpdate) => {
+                        if (!hostelUpdateErr) {
+                            res.redirect("/admin/hostel/add");
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+})
+
+app.post("/admin/hostel/add/seat", (req, res) => {
+    const seatName = req.body.seatName;
+    const roomId = req.body.roomName;
+    Room.findById(roomId, (err, room) => {
+        if (!err) {
+            const seat = new Seat({
+                seatName,
+                roomName: room.roomName,
+                hostelName: room.hostelName
+            })
+            seat.save((seaterr, seatres) => {
+                if (!err) {
+                    room.seats.push(seatres._id)
+                    room.save((roomUpdateErr, roomUpdate) => {
+                        if (!roomUpdateErr) {
+                            res.redirect("/admin/hostel/add");
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+})
+app.post("/admin/hostel/query/hostel", (req, res) => {
+    console.log(req.query)
+     if(req.query.id){
+    Hostel.findById(req.query.id).populate("rooms").exec((err, rs) => {
+        if (err) {
+            console.log("GG")
+            res.json({error: err})
+        } else if(rs) {
+            console.log(rs.rooms)
+            res.json(rs.rooms)
+        }
+    })
+     }
+
+})
+app.get("/admin/hostel/query/room", (req, res) => {
+    console.log(req.query.id)
+
+    if(req.query.id){
+        Room.findById(req.query.id, (err, rs) => {
+            if (err) {
+                res.json({error: err})
+            } else {
+                res.json(rs.seats)
+            }
+        })
+    }
+})
 app.get(["/admin/applications/:status", "/admin/applications"], (req, res) => {
     const status = req.params.status;
     let page = req.query.p;

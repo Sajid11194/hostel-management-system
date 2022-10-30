@@ -1,0 +1,145 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs') %>
+
+<div class="row mt-2">
+    <div class="col-lg-6 bg-white rounded mx-2">
+        <h4 class="my-3 text-secondary">Add New Hostel</h4>
+        <hr>
+        <form action="/admin/hostel/add/hostel" method="post">
+            <div class="row my-2">
+                <div class="col-10">
+                    <input type="text" name="hostelName" class="form-control" placeholder="Hostel Name">
+                </div>
+                <div class="col">
+                    <input type="text" name="floors" class="form-control" placeholder="Floors">
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-10">
+                    <input type="text" name="address" class="form-control" placeholder="Address">
+                </div>
+                <div class="col">
+                    <select class="form-control" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row my-4 mx-1">
+                <button type="submit" class="btn bg-gradient btn-success">Add Hostel</button>
+            </div>
+        </form>
+
+    </div>
+    <div class="col-lg-5 bg-white rounded mx-2">
+        <h4 class="my-3 text-secondary">Add Room</h4>
+        <hr>
+        <form action="/admin/hostel/add/room" method="post">
+            <div class="row my-2">
+                <div class="col-10">
+
+                    <select class="form-control" name="hostelName">
+                        <option value="" disabled selected>Select Hostel</option>
+
+                    <% hostels.forEach((item)=>{ %>
+                        <option value="<%= item._id %>"><%= item.hostelName %></option>
+                        <% }); %>
+
+                    </select>
+
+
+                </div>
+                <div class="col">
+                    <input type="text" name="floor" class="form-control" placeholder="floor">
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-6">
+                    <input type="text" name="roomName" class="form-control" placeholder="Room Name">
+                </div>
+                <div class="col-6">
+                    <input type="number" name="maxSeat" class="form-control" placeholder="Max Seats , Eg: 2">
+
+                </div>
+            </div>
+
+            <div class="row my-4 mx-1">
+                <button type="submit" class="btn bg-gradient btn-success">Add Room</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+<div class="row my-4">
+    <div class="col-lg-6 bg-white rounded mx-2">
+        <h4 class="my-3 text-secondary">Add Seat</h4>
+        <hr>
+        <form action="/admin/hostel/add/seat" method="post">
+            <div class="row py-2">
+                <div class="col-12">
+                    <select class="form-control" name="hostelName" id="selectHostel">
+                        <option value="" disabled selected>Select Hostel</option>
+                    <% hostels.forEach((item)=>{ %>
+                        <option value="<%= item._id %>"><%= item.hostelName %></option>
+                        <% }); %>
+                    </select>
+                    <script>
+                        $("#selectHostel").change(function () {
+                            const roomList = $("#selectRoom");
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/hostel/query/hostel?id=" + $(this).val(),
+                                dataType: "json",
+                                success: function (result) {
+                                    roomList.find('option').remove()
+                                    roomList.append('<option value="" disabled selected>Select Hostel</option>')
+                                    result.forEach((item) => {
+                                        var str = `<option value=\"${item._id}\">${item.roomName}</option>`
+                                        roomList.append(str)
+                                    })
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log("Fail")
+                                }
+                            })
+                        });
+                    </script>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-6">
+                    <select class="form-control" name="roomName" id="selectRoom">
+                        <option value="" disabled selected>Select Room</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <input type="text" name="seatName" class="form-control" placeholder="Seat Name">
+                </div>
+            </div>
+
+
+            <div class="row my-4 mx-1">
+                <button type="submit" class="btn bg-gradient btn-success">Add Room</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+<%- include('../partials/footer.ejs') %>
+
+<!--<div class="list-group">-->
+<!--    -->
+<!--    <a class="list-group-item list-group-item-action " href="#">-->
+<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
+<!--        <p>Hostel :</p>-->
+<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
+<!--            <p class="badge bg-primary">Pending</p></div>-->
+<!--    </a>-->
+<!--</div>-->

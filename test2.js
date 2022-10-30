@@ -39,40 +39,6 @@ const applicationSchema = new mongoose.Schema({
 
 })
 const Application = mongoose.model("Application", applicationSchema);
-const roomSchema = new mongoose.Schema({
-    roomName: {
-        type: String,
-        uppercase: true
-    },
-    floor: Number,
-    seats: [{type: mongoose.Schema.Types.ObjectId, ref: 'Seat'}]
-});
-const Room = mongoose.model('Room', roomSchema);
-
-const seatSchema = new mongoose.Schema({
-    seatName: {
-        type: String,
-        required: true,
-        unique: true,
-        uppercase: true
-    },
-    roomName: {
-        type: String,
-        required: true,
-        uppercase: true
-    },
-    hostelName: {
-        type: String,
-        required: true,
-        unique: true,
-        uppercase: true
-    },
-    onService: {
-        type: Boolean,
-        default: true
-    },
-    resident: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
-})
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -110,15 +76,54 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", userSchema);
-const Seat = mongoose.model("Seat", seatSchema);
-const room = new Room({
-    roomName: "101",
-    floor: 1,
 
+const roomSchema = new mongoose.Schema({
+    roomName: {
+        type: String,
+        uppercase: true
+    },
+    floor: Number,
+    seats: [{type: mongoose.Schema.Types.ObjectId, ref: 'Seat'}]
+});
+const Room = mongoose.model('Room', roomSchema);
+
+const seatSchema = new mongoose.Schema({
+    seatName: {
+        type: String,
+        required: true,
+        unique: true,
+        uppercase: true
+    },
+    roomName: {
+        type: String,
+        required:true,
+        uppercase: true
+    },
+    hostelName: {
+        type: String,
+        required: true,
+        uppercase: true
+    },
+    onService: {
+        type: Boolean,
+        default: true
+    },
+    resident: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 
+const Seat = mongoose.model("Seat", seatSchema);
+const room = new Room({
+    roomName: "100",
+    floor: 1,
+})
+
+
+
 const hostelSchema = new mongoose.Schema({
-    hostelName: String,
+    hostelName: {
+        type:String,
+        unique:true
+    },
     address: String,
     floors: Number,
     rooms:[roomSchema]
@@ -126,22 +131,74 @@ const hostelSchema = new mongoose.Schema({
 const Hostel = mongoose.model('hostellist', hostelSchema);
 
 const hostel = new Hostel({
-    hostelName: "Laal Boys Ashulia",
-    address: "khagan",
-    floors: 150
+    hostelName: "Test Hostel",
+    address: "Dhaka",
+    floors: 420
 });
 
-Hostel.findOne({hostelName:"Laal Boys Ashulia"},(err,res)=>{
+//hostel.save()
 
-    res.rooms.push(room);
-    res.save((e,r)=>{
-        console.log("saved");
-    })
+// Hostel.findById("635afb879d2aa660a509b62c",(err,res)=>{
+//     res.rooms.push(room)
+//     res.save()
+// })
+Hostel.findById("635afb879d2aa660a509b62c",(err,res)=>{
+    if(res){
+    res.rooms.forEach((room)=>{
+        if(room.roomName=="100"){
+            const seat=new Seat({
+                seatName: "D",
+                roomName:room.roomName,
+                hostelName:res.hostelName+"B"
+            })
+            seat.save((err2,res2)=>{
+                if (!err2){
+                room.seats.push(res2._id)
+                res.save((err3,res3)=>{
+                    console.log(err3)
+                    console.log(res3)
+                })
+                }
+                else{
+                    console.log(err2)
+                }
+            })
+
+        } else {
+            console.log("room not found")
+        }
+    })}
 })
 
+// Hostel.findOne({},(err,res)=>{
+//     console.log(err)
+//     console.log(res)
+//     res.rooms.push(room)
+//     res.save((er,rs)=>{
+//         console.log(er)
+//         console.log(rs)
+//     })
+// })
+// Hostel.findOne({hostelName:"Laal Boys Ashulia"},(err,res)=>{
+//
+//     res.rooms.push(room);
+//     res.save((e,r)=>{
+//         console.log("saved");
+//     })
+// })
+
+// Hostel.findOne({hostelName:"Laal Boys Ashulia"},(err,res)=>{
+//
+//     res.rooms.push(room);
+//     res.save((e,r)=>{
+//         console.log("saved");
+//     })
+// })
+//
+//
 // const info=(xd)=>{
 //     return {
-//         user: "633c455ddfe915efc9cf44d0", hostel:{hostelName:xd+"  GG", roomName:"GG1A"}, package:"Luxury", payment: {
+//         user: "6359a04fd4b07197b6570b74", hostel:{hostelName:xd+"  GG", roomName:"GG1A"}, package:"Luxury", payment: {
 //         method:"Bkash", amount:"100", trxId:"HH"
 //     }, applicationDate:new Date(), lastSubmitDate:new Date(), note:xd,status:"rejected"
 //     }

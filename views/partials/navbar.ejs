@@ -5,7 +5,9 @@
             <% if(global.user != undefined){ %>
                 <div class="d-flex align-items-center ms-auto">
                     <i class="fa-solid fa-user"></i>
-                    <span class="mx-3"> <%= global.user.username %></span>
+                    <span class="mx-2"> <%= global.user.username %></span>
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <a href="/<%= global.role %>/logout" class="mx-1 text-decoration-none">Logout</a>
                 </div>
             <% } %>
             <button class="navbar-toggler d-none" data-bs-toggle="sidebar" data-bs-target="#sidebar"  ><span class="navbar-toggler-icon"></span>
@@ -13,14 +15,14 @@
         </div>
     </nav>
     <div class="row">
-        <div class="col-lg-2 col-md-4 d-none d-md-block" id="sidebar">
+        <div class="col-lg-2 col-md-4 " id="sidebar">
             <div class="d-flex align-items-center">
-                <i class="fa-3x mx-3 fa-solid fa-user fa-flip" style="--fa-animation-duration: 3s"></i>
+                <i class="fa-3x mx-3 fa-solid fa-user " ></i>
                 <div class="mx-2 mt-3">
                 <a class="text-decoration-none fw-folder" href="http://fb.com">
                 Farhan Sajid
                 </a>
-                <p class="text-success fw-bolder"><%= global.role %></p>
+                <p class="text-success"><%= global.role %></p>
                 </div>
             </div>
             <hr>
@@ -28,9 +30,9 @@
                 <a href="/admin" class="list-group-item list-group-item border-0 rounded">
                     <i  class="text-primary fa-solid fa-folder"></i> Dashboard
                 </a>
-                <a href="/admin/applications/all" class="list-group-item active rounded" data-bs-toggle="collapse"
+                <a href="/admin/applications/all" class="list-group-item active bg-gradient rounded" data-bs-toggle="collapse"
                    data-bs-target="#applications-status" aria-expanded="false">
-                    <i  class="text-primary fa-solid fa-folder"></i> Applications
+                    <i  class="fa-solid fa-folder"></i> Applications
                 </a>
                 <div class="collapse ps-2" id="applications-status">
                     <a href="/admin/applications/pending" class="list-group-item  border-0 rounded">
@@ -41,6 +43,9 @@
                     </a>
                     <a href="/admin/applications/accepted" class="list-group-item  border-0 rounded">
                         <i  class="text-primary fa-solid fa-folder"></i> Accepted
+                    </a>
+                    <a href="/admin/applications/rejected" class="list-group-item  border-0 rounded">
+                        <i  class="text-primary fa-solid fa-folder"></i> Rejected
                     </a>
                     <a href="/admin/applications/all" class="list-group-item  border-0 rounded">
                         <i  class="text-primary fa-solid fa-folder"></i> All
@@ -70,4 +75,4 @@
             </div>
         </div>
 
-        <div class="col-lg-10  col-md-8 mt-3 content bg-light p-3">
+        <div class="col-lg-10  col-md-8 mt-3 content p-3 body-content">

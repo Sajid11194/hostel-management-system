@@ -28,10 +28,10 @@
                             class="d-md-none w-bold">Hostel : </span><%= application.hostel.hostelName %></td>
                 <td class="text-break"><span
                             class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
-                <td class="text-break d-flex justify-content-around"><a class="btn btn-primary"
+                <td class="text-break d-flex justify-content-around"><a class="btn bg-gradient btn-primary"
                                                                         href="./applications/review/<%= application._id %>">View</a>
-                    <a class="btn btn-success" href="./applications/review/<%= application._id %>">Accept</a>
-                    <a class="btn btn-danger" href="./applications/review/<%= application._id %>">Reject</a></td>
+                    <a class="btn bg-gradient btn-success" href="./applications/review/<%= application._id %>">Accept</a>
+                    <a class="btn bg-gradient btn-danger" href="./applications/review/<%= application._id %>">Reject</a></td>
             </tr>
         <% }) %>
 
