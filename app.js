@@ -8,7 +8,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const LocalStrategy = require("passport-local");
 const slashes = require("connect-slashes");
 const db = require("./schema/schema.js");
-
+const flash = require('connect-flash');
 //Database Schema
 const Admin = db.Admin
 const User = db.User
@@ -44,7 +44,7 @@ app.use(passport.session());
 
 passport.use('admin', new LocalStrategy((username, password, callback) => {
     Admin.findOne({username: username, password: password}, (err, user) => {
-        if (err) {
+        if (err || !user) {
             callback(err);
         } else {
             newAdmin = {
@@ -57,7 +57,7 @@ passport.use('admin', new LocalStrategy((username, password, callback) => {
 }));
 passport.use('user', new LocalStrategy((username, password, callback) => {
     User.findOne({username: username, password: password}, (err, user) => {
-        if (err) {
+        if (err || !user) {
             callback(err);
         } else {
             newUser = {
@@ -70,6 +70,7 @@ passport.use('user', new LocalStrategy((username, password, callback) => {
 }));
 
 passport.serializeUser(function (user, done) {
+    console.log(user)
     done(null, {_id: user.user._id, role: user.role});
 });
 
@@ -96,12 +97,15 @@ function isAdmin(req) {
     return req.isAuthenticated() && (req.session.passport.user.role == "admin");
 }
 
+app.use(flash());
 
 app.use((req, res, next) => {
     app.locals.global = {
         role: req.session.passport?.user.role,
         user: req?.user,
-        path: req.path
+        path: req.path,
+        success:req.flash('success'),
+        error:req.flash('error')
     };
 
     next()
@@ -118,8 +122,6 @@ app.use(/^[\/]user($|\/)(?!login)(?!register).*/, (req, res, next) => {
     if (isUser(req)) {
         next();
     } else {
-        console.log("XY")
-
         res.redirect("/user/login")
     }
 })
@@ -128,16 +130,73 @@ app.use(slashes(false));
 
 
 //Functions
+Seat.findById("635d9b5da4c49d5394d8b168",(err,res)=>{
+    console.log(res)
+    res.resident=null
+    res.save((er,rs)=>{
+        console.log("SAved")
+        console.log(rs)
+    })
+})
+function bookSeat(userid,seatid){
+    console.log("BOOKSEAT")
+    console.log(userid)
+    console.log(seatid)
+    Seat.findById(seatid, (seatError, seat) => {
+        if (seat.onService) {
+            if (!seat.resident) {
+                User.findById(userid, (errUser, user) => {
+                    if (errUser || !user) {
+                        return {status:"error",message: "Could not update user"};
+                    } else {
+                        if(user.seat){
+                            return {status:"error",message: "User already assigned to a seat"};
+                        } else {
+                            user.seat=seatid
+                            user.save((errUserSave,savedUser)=>{
+                                if(errUserSave){
+                                    return {status:"error",message: "Could not save user info,try again."};
+                                } else {
+                                    seat.resident=savedUser._id
+                                    seat.save((errSeatSave,savedSeat)=>{
+                                        if(errSeatSave){
+                                            return {status:"error",message: "Could not save seat info,try again."};
+                                        } else {
+                                            return {status:"success",message: "Seat booked."};
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    }
+                })
 
-function bookSeat(user,seat){
+            } else {
+                return {status:"error",message: "Seat already occupied"};
+            }
+        } else {
+            return {status:"error",message: "Seat is not on Service"};
+
+        }
+    })
 
 }
 
-app.get("/", (req, res) => {
-    res.send("<h1>Home</h1>")
-});
+
+
+
+app.get('/', (req, res) => {
+    req.flash('success',"XD")
+    req.flash('success',"GG")
+    res.redirect('/a')
+})
+
+app.get('/a', (req, res) => {
+    res.send(req.path)
+})
 
 app.get("/user/login", (req, res) => {
+    console.log(req.isAuthenticated())
     if (!isUser(req)) {
         res.render('user/login');
     } else {
@@ -145,9 +204,12 @@ app.get("/user/login", (req, res) => {
     }
 });
 
-app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/loginx'}), (err, req, res, next) => {
+app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/login'}), (err, req, res, next) => {
     if (err) next(err);
-    console.log("GG")
+    if(!req.isAuthenticated())
+    {
+        req.flash("error","Invalid username/password")
+    }
     res.redirect("/user");
 });
 
@@ -290,6 +352,17 @@ app.post('/admin/login', passport.authenticate('admin', {
     res.redirect("/admin");
 });
 
+// app.post('/admin/login', function(req, res, next) {
+//     passport.authenticate('admin', function(err, user, info) {
+//         if (err) { return next(err); }
+//         if (!user) {
+//             req.flash("error","Username or password invalid");
+//             return res.redirect('/admin/login'); }
+//         req.flash("success","Logged In");
+//
+//         req.login(user, next);
+//     })(req, res, next);
+// });
 
 app.get("/admin/register", (req, res) => {
     if (!isAdmin(req)) {
@@ -322,7 +395,7 @@ app.get("/admin/hostel", (req, res) => {
 
 app.get("/admin/hostel/add", (req, res) => {
     Hostel.find({},(err,result)=>{
-        res.render('admin/hostel-add',{hostels:result})
+        res.render('admin/hostel-add',{hostels:result,success:req.flash('success'),error:req.flash('error')})
     })
 })
 
@@ -339,10 +412,12 @@ app.post("/admin/hostel/add/hostel", (req, res) => {
     })
     hostel.save((err,rs)=>{
         if(!err){
-            res.redirect("/admin/hostel/add");
+            req.flash("success","Successfully added new hostel")
         } else {
-            console.log(err)
+            req.flash("error","Failed to add new hostel")
+
         }
+        res.redirect("/admin/hostel/add");
     })
 })
 app.post("/admin/hostel/add/room", (req, res) => {
@@ -383,30 +458,46 @@ app.post("/admin/hostel/add/seat", (req, res) => {
             })
             seat.save((seaterr, seatres) => {
                 if (!err) {
+                    console.log(seatres)
                     room.seats.push(seatres._id)
                     room.save((roomUpdateErr, roomUpdate) => {
                         if (!roomUpdateErr) {
                             res.redirect("/admin/hostel/add");
                         }
                     })
+                } else {
+                    console.log("Error Save Seat")
                 }
             })
         }
     })
 
 })
-app.post("/admin/hostel/query/hostel", (req, res) => {
+app.post("/admin/hostel/query", (req, res) => {
     console.log(req.query)
-     if(req.query.id){
-    Hostel.findById(req.query.id).populate("rooms").exec((err, rs) => {
+    if(req.query.getHostels){
+        Hostel.find({},(err,hostel)=>{
+            res.json(hostel)
+        })
+    }
+    else if(req.query.getRooms){
+    Hostel.findById(req.query.getRooms).populate("rooms").exec((err, rs) => {
         if (err) {
-            console.log("GG")
             res.json({error: err})
         } else if(rs) {
-            console.log(rs.rooms)
             res.json(rs.rooms)
         }
     })
+     } else if(req.query.getSeats){
+         Room.findById(req.query.getSeats).populate("seats").exec((err, rs) => {
+             if (err || !rs) {
+                 res.json({error: err})
+             } else if(rs) {
+                 res.json(rs.seats)
+             }
+         })
+     } else {
+         res.json({error: "bad request"});
      }
 
 })
@@ -530,3 +621,48 @@ app.post("/admin/applications/review/:id/:action", (req, res) => {
 
 });
 
+app.get("/admin/user",(req,res)=>{
+    let page = req.query.p;
+    if (page < 1 || page == undefined) { //defaults to page 1
+        page = 1;
+    }
+    const limit = 9;
+    const find = {}
+
+    //get only 10 results and | if page 2 then skips first (2*10-10)=10 results
+    User.find(find).skip(page * limit - limit).limit(limit).populate('seat').exec((err, users) => {
+        if (err) {
+            console.log(err)
+        } else {
+            User.count(find).exec((err, total) => {
+                const totalPage = Math.round(Number(total) / Number(limit));
+                res.render('admin/user-list', {
+                    users,
+                    stats: {total: Number(total), page: Number(page), limit: limit, totalPage: totalPage}
+                });
+            })
+
+        }
+    })
+    ;
+});
+
+app.get("/admin/user/review/:userid",(req,res)=>{
+    User.findById(req.params.userid).populate('seat').exec((err, user) => {
+        if(err || !user){
+            req.flash('error','User not found')
+        } else {
+            Hostel.find({},(er,result)=>{
+                res.render('admin/review-user',{user,hostels:result})
+            })
+        }
+    })
+
+})
+
+app.post("/admin/book",(req,res)=>{
+    console.log(req.path);
+    const result=bookSeat(req.body.user,req.body.seat);
+    console.log(result)
+    res.redirect("/admin/user")
+})

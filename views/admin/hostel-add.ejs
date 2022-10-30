@@ -2,6 +2,7 @@
 <%- include('../partials/navbar.ejs') %>
 
 <div class="row mt-2">
+
     <div class="col-lg-6 bg-white rounded mx-2">
         <h4 class="my-3 text-secondary">Add New Hostel</h4>
         <hr>
@@ -40,15 +41,30 @@
             <div class="row my-2">
                 <div class="col-10">
 
-                    <select class="form-control" name="hostelName">
+                    <select class="form-control" name="hostelName" id="selectHostelA">
                         <option value="" disabled selected>Select Hostel</option>
-
-                    <% hostels.forEach((item)=>{ %>
-                        <option value="<%= item._id %>"><%= item.hostelName %></option>
-                        <% }); %>
-
                     </select>
-
+                    <script>
+                        $(function () {
+                            const hostelList = $("#selectHostelA,#selectHostelB");
+                            $.ajax({
+                                type: "POST",
+                                url: `/admin/hostel/query?getHostels=all`,
+                                dataType: "json",
+                                success: function (result) {
+                                    hostelList.find('option').remove()
+                                    hostelList.append('<option value="" disabled selected>Select Hostel</option>')
+                                    result.forEach((item) => {
+                                        var str = `<option value=\"${item._id}\">${item.hostelName}</option>`
+                                        hostelList.append(str)
+                                    })
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error)
+                                }
+                            })
+                        });
+                    </script>
 
                 </div>
                 <div class="col">
@@ -81,29 +97,27 @@
         <form action="/admin/hostel/add/seat" method="post">
             <div class="row py-2">
                 <div class="col-12">
-                    <select class="form-control" name="hostelName" id="selectHostel">
+                    <select class="form-control" name="hostelName" id="selectHostelB">
                         <option value="" disabled selected>Select Hostel</option>
-                    <% hostels.forEach((item)=>{ %>
-                        <option value="<%= item._id %>"><%= item.hostelName %></option>
-                        <% }); %>
                     </select>
                     <script>
-                        $("#selectHostel").change(function () {
+                        $("#selectHostelB").change(function () {
                             const roomList = $("#selectRoom");
                             $.ajax({
                                 type: "POST",
-                                url: "/admin/hostel/query/hostel?id=" + $(this).val(),
+                                url: `/admin/hostel/query?getRooms=${$(this).val()}`,
                                 dataType: "json",
                                 success: function (result) {
+                                    console.log(result)
                                     roomList.find('option').remove()
-                                    roomList.append('<option value="" disabled selected>Select Hostel</option>')
+                                    roomList.append('<option value="" disabled selected>Select Room</option>')
                                     result.forEach((item) => {
                                         var str = `<option value=\"${item._id}\">${item.roomName}</option>`
                                         roomList.append(str)
                                     })
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log("Fail")
+                                    console.log(error)
                                 }
                             })
                         });
@@ -124,7 +138,7 @@
 
 
             <div class="row my-4 mx-1">
-                <button type="submit" class="btn bg-gradient btn-success">Add Room</button>
+                <button type="submit" class="btn bg-gradient btn-success">Add Seat</button>
             </div>
         </form>
     </div>

@@ -1,8 +1,8 @@
 <%- include('../partials/header.ejs') %>
 <%- include('../partials/navbar.ejs') %>
 
-    <div>
-        <h2 class="display-5 mt-2 mb-3">Hostel Applications </h2>
+<div>
+    <h2 class="display-5 mt-2 mb-3">Users </h2>
     <table class="table">
         <thead class="table-light">
         <tr>
@@ -10,28 +10,37 @@
             </th>
             <th scope="col">Gender
             </th>
-            <th scope="col">Hostel
+            <th scope="col">Seat
             </th>
-            <th scope="col">Status
+            <th scope="col">Balance
             </th>
             <th scope="col" class="text-center">Action</th>
         </tr>
         </thead>
         <tbody>
-        <% applications.forEach((application, i)=>{ %>
+        <% users.forEach((user, i)=>{ %>
             <tr>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Name : </span><%= application.user.profile.firstName %></td>
+                            class="d-md-none w-bold">Name : </span><%= user.profile.firstName %></td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Gender : </span><%= application.user.profile.gender %></td>
+                            class="d-md-none w-bold">Gender : </span><%= user.profile.gender %></td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Hostel : </span><%= application.hostel.hostelName  %></td>
+                            class="d-md-none w-bold">Seat : </span>
+                    <% if(user.seat){ let details =`Seat : ${user.seat.seatName}<br/>Room : ${user.seat.roomName}<br/>Hostel : ${user.seat.hostelName}`%>
+                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= details %>">
+                        <%= user.seat.hostelName %>
+                    </span>
+
+                    <% } else {%>
+                          Unavailable
+                    <%}%>
+                </td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
+                            class="d-md-none w-bold">Balance : </span><%= user.status %></td>
                 <td class="text-break d-flex justify-content-around"><a class="btn bg-gradient btn-primary"
-                                                                        href="./applications/review/<%= application._id %>">View</a>
-                    <a class="btn bg-gradient btn-success" href="./applications/review/<%= application._id %>">Accept</a>
-                    <a class="btn bg-gradient btn-danger" href="./applications/review/<%= application._id %>">Reject</a></td>
+                                                                        href="./user/review/<%= user._id %>">View</a>
+                    <a class="btn bg-gradient btn-success" href="./user/<%= user._id %>">Accept</a>
+                    <a class="btn bg-gradient btn-danger" href="./user/review/<%= user._id %>">Reject</a></td>
             </tr>
         <% }) %>
 
@@ -40,20 +49,6 @@
     </table>
 
 
-    <!--<div class="container">-->
-    <!--    <% applications.forEach((application, i)=>{ %>-->
-
-    <!--    <div class="card bg-light">-->
-    <!--        <div class="card-header card-dark">-->
-    <!--            <%= application.applicationDate %>-->
-    <!--        </div>-->
-    <!--        <ul class="list-group list-group-flush">-->
-    <!--            <li class="list-group-item">Name : <%= application.user.firstName %></li>-->
-    <!--            <li class="list-group-item">Gender : <%= application.user.gender %></li>-->
-    <!--            <li class="list-group-item">Hostel : <%= application.hostel.hostelName %></li>-->
-    <!--x        </ul>-->
-    <!--    </div>-->
-    <!--    <% }); %>-->
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
             <li class="page-item  <% if(Number(stats.page) <= 1){ %>disabled<% }; %>">

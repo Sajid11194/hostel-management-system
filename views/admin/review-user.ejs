@@ -1,0 +1,170 @@
+<%- include('../partials/header.ejs') %>
+<%- include('../partials/navbar.ejs') %>
+
+<div class="row mt-2">
+    <div>
+        <h3>User Info: </h3>
+        <hr class="my-4"/>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" value="<%= user.profile.firstName %>" disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" value="<%= user.profile.lastName %>" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" value="<%= user.email %>" disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" value="<%= user.profile.contact.phoneNumber %>" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Gender</label>
+                <select class="form-select" disabled>
+                    <option value="male" <% if(user.profile.gender == "male") { %>selected
+                            <% }; %>
+                    >Male
+                    </option>
+                    <option value="female" <% if(user.profile.gender == "female") { %>selected
+                            <% }; %>
+                    >Female
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" value="<%= user.profile.dob %>" disabled>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Permanent Address</label>
+                <input type="text" class="form-control" value="<%= user.profile.contact.permanentAddress %>"
+                       disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Assigned Seat</label>
+                <input type="text" class="form-control" value="<% if(user.seat){ let details =`Seat : ${user.seat.seatName} , Room : ${user.seat.roomName} , Hostel : ${user.seat.hostelName}`%><%= details %>
+                <% } else {%>Unavailable
+                <%}%>"
+
+                       disabled>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row my-4">
+    <div class="col-lg-6 bg-white rounded mx-2">
+        <h4 class="my-3 text-secondary">Assign Seat</h4>
+        <hr>
+        <form action="/admin/book" method="post">
+            <div class="row py-2">
+                <div class="col-12">
+                    <select class="form-control" id="selectHostel">
+                        <option value="" disabled selected>Select Hostel</option>
+
+                    </select>
+                    <script>
+                        $(function () {
+                            const hostelList = $("#selectHostel");
+                            $.ajax({
+                                type: "POST",
+                                url: `/admin/hostel/query?getHostels=all`,
+                                dataType: "json",
+                                success: function (result) {
+                                    hostelList.find('option').remove()
+                                    hostelList.append('<option value="" disabled selected>Select Hostel</option>')
+                                    result.forEach((item) => {
+                                        var str = `<option value=\"${item._id}\">${item.hostelName}</option>`
+                                        hostelList.append(str)
+                                    })
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error)
+                                }
+                            })
+                        });
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-6">
+                    <select class="form-control" id="selectRoom">
+                        <option value="" disabled selected>Select Room</option>
+                    </select>
+                    <script>
+                        $("#selectHostel").change(function () {
+                            const roomList = $("#selectRoom");
+                            $.ajax({
+                                type: "POST",
+                                url: `/admin/hostel/query?getRooms=${$(this).val()}`,
+                                dataType: "json",
+                                success: function (result) {
+                                    console.log(result)
+                                    roomList.find('option').remove()
+                                    roomList.append('<option value="" disabled selected>Select Room</option>')
+                                    result.forEach((item) => {
+                                        var str = `<option value=\"${item._id}\">${item.roomName}</option>`
+                                        roomList.append(str)
+                                    })
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error)
+                                }
+                            })
+                        });
+                    </script>
+                </div>
+                <div class="col-6">
+                    <select class="form-control" name="seat" id="selectSeat">
+                        <option value="" disabled selected>Select Seat</option>
+                    </select>
+                    <script>
+                        $("#selectRoom").change(function () {
+                            const seatList = $("#selectSeat");
+                            $.ajax({
+                                type: "POST",
+                                url: `/admin/hostel/query?getSeats=${$(this).val()}`,
+                                dataType: "json",
+                                success: function (result) {
+                                    console.log(result)
+                                    console.log("Hi")
+                                    seatList.find('option').remove()
+                                    seatList.append('<option value="" disabled selected>Select Seat</option>')
+                                    result.forEach((item) => {
+                                        var str = `<option value=\"${item._id}\">${item.seatName}</option>`
+                                        seatList.append(str)
+                                    })
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log("Error")
+                                }
+                            })
+                        });
+                    </script>
+                </div>
+
+            </div>
+
+            <input type="hidden" value="<%= user._id%>" name="user">
+            <div class="row my-4 mx-1">
+                <button type="submit" class="btn bg-gradient btn-success">Add Seat</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+<%- include('../partials/footer.ejs') %>
