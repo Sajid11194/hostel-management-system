@@ -1,8 +1,10 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
 
-    <div>
-        <h2 class="display-5 mt-2 mb-3">Hostel Applications </h2>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header"><h5>Applications<h4></div>
+        <div class="card-body">
     <table class="table">
         <thead class="table-light">
         <tr>
@@ -14,7 +16,7 @@
             </th>
             <th scope="col">Status
             </th>
-            <th scope="col" class="text-center">Action</th>
+            <th scope="col" class="text-center w-25" >Action</th>
         </tr>
         </thead>
         <tbody>
@@ -56,11 +58,11 @@
             </li>
         </ul>
     </nav>
+        </div>
+    </div>
 </div>
 
-</div>
-</div>
-</div>
+</main>
 <%- include('./partials/footer.ejs') %>
 
 <!--<div class="list-group">-->

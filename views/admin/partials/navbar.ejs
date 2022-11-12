@@ -1,69 +1,36 @@
 <div class="container-fluid">
-    <nav class="navbar">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <div class="navbar-brand">Lal House</div>
-            <% if(global.user != undefined){ %>
-                <div class="d-flex align-items-center ms-auto">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="mx-2"> <%= global.user.username %></span>
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="/admin/logout" class="mx-1 text-decoration-none">Logout</a>
-                </div>
-            <% } %>
-            <button class="navbar-toggler d-none" data-bs-toggle="sidebar" data-bs-target="#sidebar"><span
-                        class="navbar-toggler-icon"></span>
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <% if(global.user != undefined){ %>
+                    <div class="d-flex align-items-center ms-auto">
+                        <i class="fa-solid fa-user text-primary"></i>
+                        <span class="mx-2 text-primary"> <%= global.user.username %></span>
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <a href="/admin/logout" class="mx-1 text-danger text-decoration-none">Logout</a>
+                    </div>
+                <% } %>
+            </div>
         </div>
     </nav>
-    <div class="row">
-        <div class="col-lg-2 col-md-4 " id="sidebar">
-            <div class="d-flex align-items-center">
-                <i class="fa-3x mx-3 fa-solid fa-user "></i>
-                <div class="mx-2 mt-3">
-                    <a class="text-decoration-none fw-folder" href="http://fb.com">
-                        Farhan Sajid
-                    </a>
-                    <p class="text-success"><%= global.role %></p>
-                </div>
-            </div>
-            <hr>
-            <div class="list-group border-5">
-                <a href="/admin" class="list-group-item list-group-item border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Dashboard
-                </a>
-                <a href="/admin/applications" class="list-group-item active bg-gradient rounded"
-                   data-bs-toggle="collapse"
-                   data-bs-target="#applications-status" aria-expanded="false">
-                    <i class="fa-solid fa-folder"></i> Applications
-                </a>
-                <div class="collapse ps-2" id="applications-status">
-                    <a href="/admin/applications?status=pending" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> Pending
-                    </a>
-                    <a href="/admin/applications?status=queue" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> On Queue
-                    </a>
-                    <a href="/admin/applications?status=accepted" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> Accepted
-                    </a>
-                    <a href="/admin/applications?status=rejected" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> Rejected
-                    </a>
-                    <a href="/admin/applications" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> All
-                    </a>
-                </div>
-
-                <a href="/admin/user" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Users
-                </a>
-                <a href="#" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Add Balance
-                </a>
-            </div>
-        </div>
-
-        <div class="col-lg-10  col-md-8 mt-3 content p-3 body-content">
+        <%- include('./sidebar.ejs') %>
+        <main class="content">
             <% global.success.forEach((message)=>{ %>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <%= message %>

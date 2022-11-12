@@ -6,7 +6,78 @@
     <script src="https://kit.fontawesome.com/f3792d485b.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .navbar{
+            color: #d55a5a;
+            background-color: #222222;
+            position: fixed;
+            left: 0px;
+            right: 0px;
+            top: 0px;
+        }
 
+        .sidebar{
+            position: fixed;
+            border-right: 1px solid whitesmoke;
+            left: 0px;
+            top:60px;
+            bottom: 0px;
+            width: 250px;
+            padding:20px;
+            overflow-y: auto;
+
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #d2d0d0;
+            border-radius: 15px;
+        }
+        *::-webkit-scrollbar {
+            width: 10px;
+        }
+        *::-webkit-scrollbar-thumb {
+            background: #d2d0d0;
+            border-radius: 15px;
+        }
+        .sidebar a{
+            display: block;
+            margin:10px 0px;
+            padding: 5px 0px;
+            color: #222222;
+            color: #222222;
+            text-decoration: none;
+            border-radius: 5px;
+
+        }
+        a:hover{
+            background-color: whitesmoke;
+        }
+
+        .content{
+            padding:20px;
+            margin-left: 250px;
+            margin-top: 60px;
+        }
+
+        main{
+            margin-top: 50px;
+        }
+        .card{
+            box-shadow: 2px 5px 2px 0px #ffffff;
+            border: #f1eeee 1px solid;
+        }
+        .card-header{
+            border-bottom: #f1eeee 1px solid;
+            background-color: transparent;
+            padding: 20px 15px 18px 15px;
+        }
+        .card:hover{
+            box-shadow: 5px 6px 8px 0px #f3eeee;
+        }
+    </style>
     <style>
         #navbarSupportedContent{
             width: 25%;

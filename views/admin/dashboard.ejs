@@ -1,58 +1,102 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
-<section class="dashboard">
-    <h1><%= %></h1>
-<div class="row text-center">
-    <div class="col-lg-3 col-md-6"><div class="alert alert-success"><h3><%=stats.userCount%></h3><hr class="my-2"><p>Users</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-warning"><h3><%=stats.appCount%></h3><hr class="my-2"><p>Pending Applications</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-info"><h3><%=stats.seatCount-stats.emptySeatCount%></h3><hr class="my-2"><p>Residents Living</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-secondary"><h3><%=stats.emptySeatCount%></h3><hr class="my-2"><p>Available Seats</p></div></div>
 
-</div>
-</section>
-<section class="dashboard">
-<div class="row">
-    <div class="col-12">
-        <table class="table">
-            <thead class="table-light">
-            <tr>
-                <th scope="col">Name
-                </th>
-                <th scope="col">Gender
-                </th>
-                <th scope="col">Hostel
-                </th>
-                <th scope="col">Status
-                </th>
-                <th scope="col" class="text-center">Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% applications.forEach((application, i)=>{ %>
-                <tr>
-                    <td class="text-break"><span
-                                class="d-md-none w-bold">Name : </span><%= application.user.profile.firstName %></td>
-                    <td class="text-break"><span
-                                class="d-md-none w-bold">Gender : </span><%= application.user.profile.gender %></td>
-                    <td class="text-break"><span
-                                class="d-md-none w-bold">Hostel : </span><%= application.hostel.hostelName %></td>
-                    <td class="text-break"><span
-                                class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
-                    <td class="text-break d-flex justify-content-around"><a class="btn btn-primary"
-                                                                            href="./admin/applications/review/<%= application._id %>">View</a>
-                        <a class="btn btn-success" href="./admin/applications/review/<%= application._id %>">Accept</a>
-                        <a class="btn btn-danger" href="./admin/applications/review/<%= application._id %>">Reject</a></td>
-                </tr>
-            <% }) %>
+<div class="container-fluid">
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <div class="text-muted">
+                        Total Users
+                    </div>
+                    <h4 ><%=stats.userCount%></h4>
+                </div>
+            </div>
+        </div>
 
-            </tbody>
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <div class="text-muted">
+                        Pending Applications
+                    </div>
+                    <h4><%=stats.appCount%></h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <div class="text-muted">
+                        Residents Living
+                    </div>
+                    <h4><%=stats.seatCount-stats.emptySeatCount%></h4>
+                </div>
+            </div>
+        </div>
 
-        </table>
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <div class="text-muted">
+                        Available Seats
+                    </div>
+                    <h4><%=stats.emptySeatCount%></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header"><h5>Pending Applications<h4></div>
+                <div class="card-body">
+
+                    <table class="table" >
+                        <thead>
+                        <tr>
+                            <th scope="col">Name
+                            </th>
+                            <th scope="col">Gender
+                            </th>
+                            <th scope="col">Hostel
+                            </th>
+                            <th scope="col">Status
+                            </th>
+                            <th scope="col" class="text-center w-25">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% applications.forEach((application, i)=>{ %>
+                            <tr>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Name : </span><%= application.user.profile.firstName %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Gender : </span><%= application.user.profile.gender %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Hostel : </span><%= application.hostel.hostelName %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
+                                <td class="text-break d-flex justify-content-around"><a class="btn btn-primary"
+                                                                                        href="./admin/applications/review/<%= application._id %>">View</a>
+                                    <a class="btn btn-success" href="./admin/applications/review/<%= application._id %>">Accept</a>
+                                    <a class="btn btn-danger" href="./admin/applications/review/<%= application._id %>">Reject</a></td>
+                            </tr>
+                        <% }) %>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
     </div>
 </div>
-</section>
-</div>
-</div>
+
 <%- include('./partials/footer.ejs') %>
 
 <!--<div class="list-group">-->

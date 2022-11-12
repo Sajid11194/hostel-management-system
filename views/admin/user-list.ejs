@@ -1,10 +1,12 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
 
-<div>
-    <h2 class="display-5 mt-2 mb-3">Users </h2>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header"><h5>List of Users<h5></div>
+        <div class="card-body">
     <table class="table">
-        <thead class="table-light">
+        <thead >
         <tr>
             <th scope="col">Name
             </th>
@@ -14,7 +16,7 @@
             </th>
             <th scope="col">Balance
             </th>
-            <th scope="col" class="text-center">Action</th>
+            <th scope="col" class="text-center w-25">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -66,8 +68,7 @@
     </nav>
 </div>
 </div>
-</div>
-</div>
+
 <%- include('./partials/footer.ejs') %>
 
 <!--<div class="list-group">-->
