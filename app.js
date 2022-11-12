@@ -104,8 +104,8 @@ app.use((req, res, next) => {
         role: req.session.passport?.user.role,
         user: req?.user,
         path: req.path,
-        success:req.flash('success'),
-        error:req.flash('error')
+        success: req.flash('success'),
+        error: req.flash('error')
     };
 
     next()
@@ -130,39 +130,39 @@ app.use(slashes(false));
 
 
 //Functions
-Seat.findById("635d9b5da4c49d5394d8b168",(err,res)=>{
-    console.log(res)
-    res.resident=null
-    res.save((er,rs)=>{
-        console.log("SAved")
-        console.log(rs)
-    })
-})
-function bookSeat(userid,seatid){
-    console.log("BOOKSEAT")
-    console.log(userid)
-    console.log(seatid)
-    Seat.findById(seatid, (seatError, seat) => {
+// Seat.findById("635d9b5da4c49d5394d8b168", (err, res) => {
+//     console.log(res)
+//     res.resident = null
+//     res.save((er, rs) => {
+//         console.log("SAved")
+//         console.log(rs)
+//     })
+// })
+
+
+function bookSeat(userId, seatId) {
+    const query=new Promise((result,error)=>{
+    Seat.findById(seatId, (seatError, seat) => {
         if (seat.onService) {
             if (!seat.resident) {
-                User.findById(userid, (errUser, user) => {
+                User.findById(userId, (errUser, user) => {
                     if (errUser || !user) {
-                        return {status:"error",message: "Could not update user"};
+                        result({status: "error", message: "Could not update user"});
                     } else {
-                        if(user.seat){
-                            return {status:"error",message: "User already assigned to a seat"};
+                        if (user.seat) {
+                            result({status: "error", message: "User already assigned to a seat"});
                         } else {
-                            user.seat=seatid
-                            user.save((errUserSave,savedUser)=>{
-                                if(errUserSave){
-                                    return {status:"error",message: "Could not save user info,try again."};
+                            user.seat = seatId
+                            user.save((errUserSave, savedUser) => {
+                                if (errUserSave) {
+                                    result({status: "error", message: "Could not save user info,try again."});
                                 } else {
-                                    seat.resident=savedUser._id
-                                    seat.save((errSeatSave,savedSeat)=>{
-                                        if(errSeatSave){
-                                            return {status:"error",message: "Could not save seat info,try again."};
+                                    seat.resident = savedUser._id
+                                    seat.save((errSeatSave, savedSeat) => {
+                                        if (errSeatSave) {
+                                            result({status: "error", message: "Could not save seat info,try again."});
                                         } else {
-                                            return {status:"success",message: "Seat booked."};
+                                            result({status: "success", message: "Seat booked."});
                                         }
                                     })
                                 }
@@ -172,44 +172,112 @@ function bookSeat(userid,seatid){
                 })
 
             } else {
-                return {status:"error",message: "Seat already occupied"};
+                result({status: "error", message: "Seat already occupied"});
             }
         } else {
-            return {status:"error",message: "Seat is not on Service"};
+            result({status: "error", message: "Seat is not on Service"});
 
         }
     })
-
+    })
+    return query;
 }
 
 
-
+function cancelSeat(userId, seatId) {
+    const query=new Promise((result,fail)=>{
+        if (userId == undefined && seatId == undefined) {
+            result({status: "error", message: "Invalid user or seat"})
+        } else if (userId) {
+            User.findById(userId, (errFindUser, user) => {
+                if (errFindUser || !user) {
+                    result({status: "error", message: "Could not find user"})
+                } else {
+                    Seat.findById(user.seat, (errFindSeat, seat) => {
+                        if (errFindSeat || !seat) {
+                            result({status: "error", message: "Could not find seat"})
+                        } else {
+                            seat.resident = null;
+                            seat.save((errSaveSeat, savedSeat) => {
+                                if (errSaveSeat) {
+                                    result({status: "error", message: "Error Updating Seat"})
+                                } else {
+                                    user.seat = null;
+                                    user.save((errSaveUser, savedUser) => {
+                                        if (errSaveUser) {
+                                            console.log(errSaveUser)
+                                            result({status: "error", message: "Error Updating User"})
+                                        } else {
+                                            console.log("HH")
+                                            result({status: "success", message: "Successfully Canceled Seat"})
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else if (seatId) {
+            Seat.findById(seatId, (errFindSeat, seat) => {
+                if (err || !seat) {
+                    result({status: "error", message: "Could not find seat"})
+                } else (seat)
+                {
+                    User.findById(seat.resident, (errFindUser, user) => {
+                        if (errFindUser || !user) {
+                            result({status: "error", message: "Could not find user"})
+                        } else {
+                            user.seat = null;
+                            user.save((errSaveUser, savedUser) => {
+                                if (errSaveUser) {
+                                    result({status: "error", message: "Error Updating User"})
+                                } else {
+                                    seat.resident = null
+                                    seat.save((errSaveSeat, savedSeat) => {
+                                        if (errSaveSeat) {
+                                            result({status: "error", message: "Error Updating Seat"})
+                                        } else {
+                                            result({status: "success", message: "Successfully Canceled User"})
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        } else {
+            result({status: "error", message: "Invalid user or seat"})
+        }})
+    return query;
+}
 
 app.get('/', (req, res) => {
-    req.flash('success',"XD")
-    req.flash('success',"GG")
+    req.flash('success', "XD")
     res.redirect('/a')
 })
 
-app.get('/a', (req, res) => {
-    res.send(req.path)
-})
+app.get("/user", (req, res) => {
+    //testing if running query in parallel will reduce time or not
+    User.findById(req.user._id).populate('seat').exec((err, user) => {
+        res.render('user/dashboard', {user});
 
+    })
+});
 app.get("/user/login", (req, res) => {
-    console.log(req.isAuthenticated())
     if (!isUser(req)) {
         res.render('user/login');
     } else {
-        res.redirect("/");
+        res.redirect("/user");
     }
 });
 
-app.post('/user/login', passport.authenticate('user', {failureRedirect: '/user/login'}), (err, req, res, next) => {
+app.post('/user/login', passport.authenticate('user', {
+    successRedirect: '/user',
+    failureRedirect: '/user/login'
+}), (err, req, res, next) => {
     if (err) next(err);
-    if(!req.isAuthenticated())
-    {
-        req.flash("error","Invalid username/password")
-    }
     res.redirect("/user");
 });
 
@@ -257,16 +325,18 @@ app.post("/user/profile", (req, res) => {
             lastName,
             gender,
             dob,
-            email,
             contact: {
                 phoneNumber,
                 permanentAddress
             }
-        }
+        },
+        email
+
     }, (err, user) => {
         if (err) {
-            console.log(err)
+            req.flash("error",error)
         } else {
+            req.flash("success","Profile Saved")
             res.redirect("/user/profile")
         }
     });
@@ -292,10 +362,7 @@ app.post("/user/apply", (req, res) => {
 
     Application.create({
         user: req.user._id,
-        hostel: {
-            hostelName,
-            roomName
-        },
+        hostel: hostelName,
         package,
         payment: {
             method,
@@ -321,7 +388,36 @@ app.post("/user/apply", (req, res) => {
     });
 
 });
+app.get("/user/applications", (req, res) => {
+    const status = req.query.status;
+    let page = req.query.p;
+    if (page < 1 || page == undefined) { //defaults to page 1
+        page = 1;
+    }
+    const limit = 9;
+    const find = {_id: req.user._id}
+    if (status != undefined) {
+        find.status = status; // building query, filter by status only if users wants
+    }
 
+    //get only 10 results and | if page 2 then skips first (2*10-10)=10 results
+    User.findById(find).populate('applications').exec((err, user) => {
+        if (err) {
+            console.log(err)
+        } else {
+            const total = user.applications.length;
+            const totalPage = Math.round(Number(total) / Number(limit));
+            const start = page * limit - limit;
+            const end = start + limit;
+            res.render('user/applications', {
+                applications: user.applications.slice(start - end),
+                stats: {total: Number(total), page: Number(page), limit: limit, totalPage: totalPage}
+            });
+
+        }
+    })
+    ;
+});
 app.listen(80, () => {
     console.log("Server Started");
 });
@@ -394,8 +490,8 @@ app.get("/admin/hostel", (req, res) => {
 })
 
 app.get("/admin/hostel/add", (req, res) => {
-    Hostel.find({},(err,result)=>{
-        res.render('admin/hostel-add',{hostels:result,success:req.flash('success'),error:req.flash('error')})
+    Hostel.find({}, (err, result) => {
+        res.render('admin/hostel-add', {hostels: result, success: req.flash('success'), error: req.flash('error')})
     })
 })
 
@@ -410,11 +506,11 @@ app.post("/admin/hostel/add/hostel", (req, res) => {
         address,
         gender
     })
-    hostel.save((err,rs)=>{
-        if(!err){
-            req.flash("success","Successfully added new hostel")
+    hostel.save((err, rs) => {
+        if (!err) {
+            req.flash("success", "Successfully added new hostel")
         } else {
-            req.flash("error","Failed to add new hostel")
+            req.flash("error", "Failed to add new hostel")
 
         }
         res.redirect("/admin/hostel/add");
@@ -474,55 +570,42 @@ app.post("/admin/hostel/add/seat", (req, res) => {
 
 })
 app.post("/admin/hostel/query", (req, res) => {
-    console.log(req.query)
-    if(req.query.getHostels){
-        Hostel.find({},(err,hostel)=>{
+    if (req.query.getHostels) {
+        Hostel.find({}, (err, hostel) => {
             res.json(hostel)
         })
-    }
-    else if(req.query.getRooms){
-    Hostel.findById(req.query.getRooms).populate("rooms").exec((err, rs) => {
-        if (err) {
-            res.json({error: err})
-        } else if(rs) {
-            res.json(rs.rooms)
-        }
-    })
-     } else if(req.query.getSeats){
-         Room.findById(req.query.getSeats).populate("seats").exec((err, rs) => {
-             if (err || !rs) {
-                 res.json({error: err})
-             } else if(rs) {
-                 res.json(rs.seats)
-             }
-         })
-     } else {
-         res.json({error: "bad request"});
-     }
-
-})
-app.get("/admin/hostel/query/room", (req, res) => {
-    console.log(req.query.id)
-
-    if(req.query.id){
-        Room.findById(req.query.id, (err, rs) => {
+    } else if (req.query.getRooms) {
+        Hostel.findById(req.query.getRooms).populate("rooms").exec((err, rs) => {
             if (err) {
                 res.json({error: err})
-            } else {
-                res.json(rs.seats)
+            } else if (rs) {
+                res.json(rs.rooms)
             }
         })
+    } else if (req.query.getSeats) {
+        Room.findById(req.query.getSeats).populate("seats").exec((err, rs) => {
+            if (err || !rs) {
+                res.json({error: err})
+            } else if (rs) {
+                let seats = rs.seats.filter(seat => !seat.resident); //filtering already booked rooms
+                res.json(seats)
+            }
+        })
+    } else {
+        res.json({error: "bad request"});
     }
+
 })
-app.get(["/admin/applications/:status", "/admin/applications"], (req, res) => {
-    const status = req.params.status;
+
+app.get("/admin/applications", (req, res) => {
+    const status = req.query.status;
     let page = req.query.p;
     if (page < 1 || page == undefined) { //defaults to page 1
         page = 1;
     }
     const limit = 9;
     const find = {}
-    if (status != "all" && status != undefined) {
+    if (status != undefined) {
         find.status = status; // building query, filter by status only if users wants
     }
 
@@ -551,77 +634,55 @@ app.get("/admin/applications/review/:id", (req, res) => {
         res.redirect("/admin/applications");
     }
     Application.findById(id).populate('user').exec((err, application) => {
-        res.render('admin/review', {application, path: req.path})
+        res.render('admin/review-application', {application, path: req.path})
     })
 
 });
-app.get("/admin/applications/review/:id/:action", (req, res) => {
-    console.log("++++++++++++++++++++++++")
-});
-app.post("/admin/applications/review/:id/:action", (req, res) => {
+
+app.post("/admin/applications/review/:id", (req, res) => {
     console.log(req.body)
     const applicationId = req.params.id;
-    const applicationAction = req.params.action;
+    const applicationAction = req.body.applicationStatus;
     const message = req.body.message;
     const seatName = req.body.seatName;
     const package = req.body.package;
 
 //here comes nested callback cancer :p
     if (applicationAction == "accepted") {
-        Application.findById(applicationId).populate('user').exec((errApp, application) => {
-            Seat.findOne({seatName}, (seatError, seat) => {
-                if (seat.onService) {
-                    if (seat.resident) {
-                        seat.update({resident: application.user._id}, (seatUpdateError, updatedSeat) => {
-                            if (seatUpdateError) {
-                                console.log("//seat update error");
-                            } else {
-                                User.findByIdAndUpdate(application.user._id, {
-                                    seat: seat._id,
-                                    package: package
-                                }, (errUser, user) => {
-                                    if (errUser) {
-                                        console.log("//user update error");
-                                    } else {
-                                        application.update({
-                                            status: applicationAction,
-                                            lastSubmitDate: new Date(),
-                                            noteFromAdmin: message
-                                        }, (appUpdateError, updatedApp) => {
-                                            if (appUpdateError) {
-                                                console.log("//app update error");
-                                            } else {
-                                                res.redirect("/admin/applications")
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    } else {
-                        console.log("//seat occupied");
-                    }
-                } else {
-                    console.log("//seat not on service");
+        const updateSeatResult = bookSeat(userid, seatid);
+        if (updateSeatResult.status == "success") {
+            Application.findByIdAndUpdate(applicationId, {
+                    status: applicationAction,
+                    lastSubmitDate: new Date(),
+                    noteFromAdmin: message
                 }
-            })
-        });
+                , (err, application) => {
+                    if (err || !application) {
+                        req.flash("error", "Could not update application")
+                    } else {
+                        req.flash("success", "Application Accepted")
+                    }
+
+                })
+        } else {
+            req.flash(updateSeatResult.status, updateSeatResult.message);
+        }
     } else {
         Application.findByIdAndUpdate(applicationId, {
             status: applicationAction,
             noteFromAdmin: message
         }, (err, application) => {
             if (err) {
-                console.log(err);
+                req.flash("error", "Could not update application")
             } else {
-                res.redirect("/admin/applications");
+                req.flash("success", `Application Status Set to ${applicationAction}`)
             }
         })
     }
-
+    res.redirect(req.headers.referer)
 });
 
-app.get("/admin/user",(req,res)=>{
+app.get("/admin/user", (req, res) => {
     let page = req.query.p;
     if (page < 1 || page == undefined) { //defaults to page 1
         page = 1;
@@ -647,22 +708,37 @@ app.get("/admin/user",(req,res)=>{
     ;
 });
 
-app.get("/admin/user/review/:userid",(req,res)=>{
+app.get("/admin/user/review/:userid", (req, res) => {
     User.findById(req.params.userid).populate('seat').exec((err, user) => {
-        if(err || !user){
-            req.flash('error','User not found')
+        if (err || !user) {
+            req.flash('error', 'User not found')
         } else {
-            Hostel.find({},(er,result)=>{
-                res.render('admin/review-user',{user,hostels:result})
+            Hostel.find({}, (er, result) => {
+                res.render('admin/review-user', {user, hostels: result})
             })
         }
     })
 
 })
 
-app.post("/admin/book",(req,res)=>{
+app.post("/admin/book-seat", (req, res) => {
     console.log(req.path);
-    const result=bookSeat(req.body.user,req.body.seat);
-    console.log(result)
-    res.redirect("/admin/user")
+    bookSeat(req.body.user, req.body.seat).then((result)=>{
+        req.flash(result.status,result.message)
+        res.redirect(req.headers.referer)
+    });
+})
+app.post("/admin/cancel-seat", async (req, res) => {
+    console.log(req.body);
+    cancelSeat(req.body.userId, req.body.seatId).then((result)=>{
+        req.flash(result.status,result.message)
+        res.redirect(req.headers.referer)
+    });
+
+})
+app.get("/admin/logout", (req, res) => {
+    req.logout({}, () => {
+        res.redirect("/admin")
+    })
+
 })

@@ -1,9 +1,9 @@
-<%- include("../partials/header.ejs") %>
-<%- include('../partials/navbar.ejs') %>
+<%- include("./partials/header.ejs") %>
+<%- include('./partials/navbar.ejs') %>
 
 <div class="bg-light">
 <div class="container">
-    <form class="row g-3 my-5" action="/user/apply" method="post">
+    <form class="row g-3 my-2 pb-3" action="/user/apply" method="post">
         <div class="col-md-6">
             <label class="form-label">Hostel</label>
             <select class="form-select" name="hostelName" required>
@@ -115,4 +115,7 @@
     </form>
 </div>
 </div>
-<%- include("../partials/footer.ejs") %>
+</div>
+</div>
+</div>
+<%- include("./partials/footer.ejs") %>

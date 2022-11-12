@@ -1,5 +1,5 @@
-<%- include('../partials/header.ejs') %>
-<%- include('../partials/navbar.ejs') %>
+<%- include('./partials/header.ejs') %>
+<%- include('./partials/navbar.ejs') %>
 
     <div>
         <h2 class="display-5 mt-2 mb-3">Hostel Applications </h2>
@@ -25,7 +25,7 @@
                 <td class="text-break"><span
                             class="d-md-none w-bold">Gender : </span><%= application.user.profile.gender %></td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Hostel : </span><%= application.hostel.hostelName  %></td>
+                            class="d-md-none w-bold">Hostel : </span><%= application.hostel  %></td>
                 <td class="text-break"><span
                             class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
                 <td class="text-break d-flex justify-content-around"><a class="btn bg-gradient btn-primary"
@@ -40,40 +40,28 @@
     </table>
 
 
-    <!--<div class="container">-->
-    <!--    <% applications.forEach((application, i)=>{ %>-->
 
-    <!--    <div class="card bg-light">-->
-    <!--        <div class="card-header card-dark">-->
-    <!--            <%= application.applicationDate %>-->
-    <!--        </div>-->
-    <!--        <ul class="list-group list-group-flush">-->
-    <!--            <li class="list-group-item">Name : <%= application.user.firstName %></li>-->
-    <!--            <li class="list-group-item">Gender : <%= application.user.gender %></li>-->
-    <!--            <li class="list-group-item">Hostel : <%= application.hostel.hostelName %></li>-->
-    <!--x        </ul>-->
-    <!--    </div>-->
-    <!--    <% }); %>-->
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
             <li class="page-item  <% if(Number(stats.page) <= 1){ %>disabled<% }; %>">
-                <a class="page-link" href="./?p=1">First Page</a>
+                <a class="page-link" href="?p=1">First Page</a>
             </li>
             <% for(let i = Number(stats.page) - 3;(i < Number(stats.page) + 3) && (i <= stats.totalPage);i++){if (i < 1) continue; %>
             <li class="page-item <% if(stats.page == i){ %>active<% }; %>"><a class="page-link"
-                                                                              href="./?p=<%= i %>"><%= i %></a></li>
+                                                                              href="?p=<%= i %>"><%= i %></a></li>
             <% }; %>
 
             <li class="page-item <% if(stats.page ==stats.totalPage){ %>disabled<% }; %>">
-                <a class="page-link" href="./?p=<%= stats.totalPage %>">Last Page</a>
+                <a class="page-link" href="?p=<%= stats.totalPage %>">Last Page</a>
             </li>
         </ul>
     </nav>
 </div>
+
 </div>
 </div>
 </div>
-<%- include('../partials/footer.ejs') %>
+<%- include('./partials/footer.ejs') %>
 
 <!--<div class="list-group">-->
 <!--    -->

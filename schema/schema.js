@@ -29,20 +29,20 @@ const applicationSchema = new mongoose.Schema({
         ref: 'User'
     },
     package: String,
-    hostel: {
-        hostelName: String,
-        roomName: String
-    },
+    hostel: String,
     payment: {
         method: String,
         amount: Number,
         trxId: String
     },
-    applicationDate: Date,
+    applicationDate: {
+        type:Date,
+        default:Date.now
+    },
     note: String,
     status: {
         type: String,
-        enum: ["draft", "pending", "accepted", "rejected", "queue"],
+        enum: ["pending", "accepted", "rejected", "queued"],
         default: "pending"
     },
     lastSubmitDate: Date,
@@ -65,6 +65,8 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+
+        lowercase: true
     },
     balance: {
         type: Number,
@@ -166,3 +168,4 @@ module.exports={
     Seat,
     xd
 }
+

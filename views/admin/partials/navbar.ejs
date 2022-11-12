@@ -7,7 +7,7 @@
                     <i class="fa-solid fa-user"></i>
                     <span class="mx-2"> <%= global.user.username %></span>
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="/<%= global.role %>/logout" class="mx-1 text-decoration-none">Logout</a>
+                    <a href="/admin/logout" class="mx-1 text-decoration-none">Logout</a>
                 </div>
             <% } %>
             <button class="navbar-toggler d-none" data-bs-toggle="sidebar" data-bs-target="#sidebar"><span
@@ -31,46 +31,32 @@
                 <a href="/admin" class="list-group-item list-group-item border-0 rounded">
                     <i class="text-primary fa-solid fa-folder"></i> Dashboard
                 </a>
-                <a href="/admin/applications/all" class="list-group-item active bg-gradient rounded"
+                <a href="/admin/applications" class="list-group-item active bg-gradient rounded"
                    data-bs-toggle="collapse"
                    data-bs-target="#applications-status" aria-expanded="false">
                     <i class="fa-solid fa-folder"></i> Applications
                 </a>
                 <div class="collapse ps-2" id="applications-status">
-                    <a href="/admin/applications/pending" class="list-group-item  border-0 rounded">
+                    <a href="/admin/applications?status=pending" class="list-group-item  border-0 rounded">
                         <i class="text-primary fa-solid fa-folder"></i> Pending
                     </a>
-                    <a href="/admin/applications/queue" class="list-group-item  border-0 rounded">
+                    <a href="/admin/applications?status=queue" class="list-group-item  border-0 rounded">
                         <i class="text-primary fa-solid fa-folder"></i> On Queue
                     </a>
-                    <a href="/admin/applications/accepted" class="list-group-item  border-0 rounded">
+                    <a href="/admin/applications?status=accepted" class="list-group-item  border-0 rounded">
                         <i class="text-primary fa-solid fa-folder"></i> Accepted
                     </a>
-                    <a href="/admin/applications/rejected" class="list-group-item  border-0 rounded">
+                    <a href="/admin/applications?status=rejected" class="list-group-item  border-0 rounded">
                         <i class="text-primary fa-solid fa-folder"></i> Rejected
                     </a>
-                    <a href="/admin/applications/all" class="list-group-item  border-0 rounded">
+                    <a href="/admin/applications" class="list-group-item  border-0 rounded">
                         <i class="text-primary fa-solid fa-folder"></i> All
                     </a>
                 </div>
 
-                <a href="#" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Seat Management
+                <a href="/admin/user" class="list-group-item  border-0 rounded">
+                    <i class="text-primary fa-solid fa-folder"></i> Users
                 </a>
-                <div class="collapse ps-2" id="applications-status">
-                    <a href="/admin/applications/pending" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> Pending
-                    </a>
-                    <a href="/admin/applications/queue" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> On Queue
-                    </a>
-                    <a href="/admin/applications/accepted" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> Accepted
-                    </a>
-                    <a href="/admin/applications/all" class="list-group-item  border-0 rounded">
-                        <i class="text-primary fa-solid fa-folder"></i> All
-                    </a>
-                </div>
                 <a href="#" class="list-group-item  border-0 rounded">
                     <i class="text-primary fa-solid fa-folder"></i> Add Balance
                 </a>

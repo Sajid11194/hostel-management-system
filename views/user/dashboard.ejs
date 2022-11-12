@@ -1,0 +1,33 @@
+<%- include('./partials/header.ejs') %>
+<%- include('./partials/navbar.ejs') %>
+<section class="dashboard">
+    <h1><%= %></h1>
+<div class="row text-center">
+    <div class="col-lg-3 col-md-6"><div class="alert alert-success"><h3><% if(user.seat){ let details =`Seat : ${user.seat.seatName}<br/>Room : ${user.seat.roomName}<br/>Hostel : ${user.seat.hostelName}`%>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= details %>">
+                        <%= user.seat.hostelName %>
+                    </span>
+
+                <% } else {%>
+                    Unavailable
+                <%}%></h3><hr class="my-2"><p>Seat</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="alert alert-warning"><h3><%=user.package?user.package:"Unavailable"%></h3><hr class="my-2"><p>Package</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="alert alert-info"><h3><%=user.balance%></h3><hr class="my-2"><p>Balance</p></div></div>
+    <div class="col-lg-3 col-md-6"><div class="alert alert-secondary"><h3><%=user.applications.length%></h3><hr class="my-2"><p>Applications</p></div></div>
+
+</div>
+</section>
+
+</div>
+</div>
+<%- include('./partials/footer.ejs') %>
+
+<!--<div class="list-group">-->
+<!--    -->
+<!--    <a class="list-group-item list-group-item-action " href="#">-->
+<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
+<!--        <p>Hostel :</p>-->
+<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
+<!--            <p class="badge bg-primary">Pending</p></div>-->
+<!--    </a>-->
+<!--</div>-->

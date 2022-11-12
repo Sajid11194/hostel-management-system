@@ -1,7 +1,13 @@
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
-x=0
-console.log(x?50:60)
+async function timeFunction() {
+    await delay(3000)
+    console.log("HI")
 
+    return "HIxx"
+}
+const x=timeFunction()
+console.log(x)
 // const x=false
 // if(x){
 //     console.log("HI")

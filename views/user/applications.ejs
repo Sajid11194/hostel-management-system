@@ -1,52 +1,39 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
 
-<div>
-    <h2 class="display-5 mt-2 mb-3">Users </h2>
+    <div>
+        <h2 class="display-5 mt-2 mb-3">Hostel Applications </h2>
     <table class="table">
         <thead class="table-light">
         <tr>
-            <th scope="col">Name
+            <th scope="col">Hostel
             </th>
-            <th scope="col">Gender
+
+            <th scope="col">Application Date
             </th>
-            <th scope="col">Seat
+            <th scope="col">Status
             </th>
-            <th scope="col">Balance
-            </th>
-            <th scope="col" class="text-center">Action</th>
         </tr>
         </thead>
         <tbody>
-        <% users.forEach((user, i)=>{ %>
+        <% applications.forEach((application, i)=>{ %>
             <tr>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Name : </span><%= user.profile.firstName %></td>
+                            class="d-md-none w-bold">Hostel : </span><%= application.hostel  %></td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Gender : </span><%= user.profile.gender %></td>
+                            class="d-md-none w-bold">Application Date : </span><%= application.applicationDate %></td>
                 <td class="text-break"><span
-                            class="d-md-none w-bold">Seat : </span>
-                    <% if(user.seat){ let details =`Seat : ${user.seat.seatName}<br/>Room : ${user.seat.roomName}<br/>Hostel : ${user.seat.hostelName}`%>
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= details %>">
-                        <%= user.seat.hostelName %>
-                    </span>
+                            class="d-md-none w-bold">Status : </span><%= application.status %></td>
 
-                    <% } else {%>
-                          Unavailable
-                    <%}%>
-                </td>
-                <td class="text-break"><span
-                            class="d-md-none w-bold">Balance : </span><%= user.status %></td>
-                <td class="text-break d-flex justify-content-around"><a class="btn bg-gradient btn-primary"
-                                                                        href="./user/review/<%= user._id %>">View</a>
-                    <a class="btn bg-gradient btn-success" href="./user/<%= user._id %>">Accept</a>
-                    <a class="btn bg-gradient btn-danger" href="./user/review/<%= user._id %>">Reject</a></td>
+
+
             </tr>
         <% }) %>
 
         </tbody>
 
     </table>
+
 
 
     <nav aria-label="Page navigation example">
@@ -65,6 +52,7 @@
         </ul>
     </nav>
 </div>
+
 </div>
 </div>
 </div>
