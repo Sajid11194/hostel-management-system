@@ -9,6 +9,8 @@ const LocalStrategy = require("passport-local");
 const slashes = require("connect-slashes");
 const db = require("./schema/schema.js");
 const flash = require('connect-flash');
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 //Database Schema
 const Admin = db.Admin
 const User = db.User
@@ -646,10 +648,14 @@ app.post("/admin/applications/review/:id", (req, res) => {
     const message = req.body.message;
     const seatName = req.body.seatName;
     const package = req.body.package;
+    const seatid = req.body.seatid;
+    const userid = req.body.userid;
+
 
 //here comes nested callback cancer :p
     if (applicationAction == "accepted") {
         const updateSeatResult = bookSeat(userid, seatid);
+        updateSeatResult.then(()=>{
         if (updateSeatResult.status == "success") {
             Application.findByIdAndUpdate(applicationId, {
                     status: applicationAction,
@@ -667,6 +673,12 @@ app.post("/admin/applications/review/:id", (req, res) => {
         } else {
             req.flash(updateSeatResult.status, updateSeatResult.message);
         }
+        //fix promise not returning value
+        return updateSeatResult;
+            console.log(updateSeatResult)
+        let a=`<h1>${updateSeatResult.status}</h1>`
+            res.send(a)
+        })
     } else {
         Application.findByIdAndUpdate(applicationId, {
             status: applicationAction,
@@ -678,8 +690,9 @@ app.post("/admin/applications/review/:id", (req, res) => {
                 req.flash("success", `Application Status Set to ${applicationAction}`)
             }
         })
+        res.redirect(req.headers.referer)
+
     }
-    res.redirect(req.headers.referer)
 });
 
 app.get("/admin/user", (req, res) => {
@@ -742,3 +755,28 @@ app.get("/admin/logout", (req, res) => {
     })
 
 })
+
+app.get("/test",(req,res)=>{
+    res.send("<div class=\"container\">\n" +
+        "        <h1>File Upload</h1>\n" +
+        "        <form id='form'>\n" +
+        "            <div class=\"input-group\">\n" +
+        "                <label for='name'>Your name</label>\n" +
+        "                <input name='name' id='name' placeholder=\"Enter your name\" />\n" +
+        "            </div>\n" +
+        "            <div class=\"input-group\">\n" +
+        "                <label for='files'>Select files</label>\n" +
+        "                <input id='files' type=\"file\" multiple>\n" +
+        "            </div>\n" +
+        "            <button class=\"submit-btn\" type='submit'>Upload</button>\n" +
+        "        </form>\n" +
+        "    </div><script>const form = document.getElementById(\"form\"); form.addEventListener(\"submit\", submitForm); function submitForm(e) { e.preventDefault(); const name = document.getElementById(\"name\"); const files = document.getElementById(\"files\"); const formData = new FormData(); formData.append(\"name\", name.value); for(let i =0; i < files.files.length; i++) { formData.append(\"files\", files.files[i]); } fetch(\"http://localhost:80/test\", { method: 'POST', body: formData }) .then((res) => console.log(res)) .catch((err) => (\"Error occured\", err)); }</script>")
+})
+
+app.post("/test", upload.array("files"), uploadFiles);
+
+function uploadFiles(req, res) {
+    console.log(req.body);
+    console.log(req.files);
+    res.json({ message: "Successfully uploaded files" });
+}

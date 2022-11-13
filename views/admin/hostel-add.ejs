@@ -1,11 +1,15 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
-
+<main>
+    <%- include('./partials/sidebar.ejs') %>
+    <div class="content">
+        <div class="container-fluid">
 <div class="row mt-2">
 
-    <div class="col-lg-6 bg-white rounded mx-2">
-        <h4 class="my-3 text-secondary">Add New Hostel</h4>
-        <hr>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header"><h5>Add New Hostel<h4></div>
+            <div class="card-body">
         <form action="/admin/hostel/add/hostel" method="post">
             <div class="row my-2">
                 <div class="col-10">
@@ -34,9 +38,12 @@
         </form>
 
     </div>
-    <div class="col-lg-5 bg-white rounded mx-2">
-        <h4 class="my-3 text-secondary">Add Room</h4>
-        <hr>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header"><h5>Add New Room<h4></div>
+            <div class="card-body">
         <form action="/admin/hostel/add/room" method="post">
             <div class="row my-2">
                 <div class="col-10">
@@ -90,10 +97,14 @@
     </div>
 
 </div>
+    </div>
+</div>
+
 <div class="row my-4">
-    <div class="col-lg-6 bg-white rounded mx-2">
-        <h4 class="my-3 text-secondary">Add Seat</h4>
-        <hr>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header"><h5>Add New Seat<h4></div>
+            <div class="card-body">
         <form action="/admin/hostel/add/seat" method="post">
             <div class="row py-2">
                 <div class="col-12">
@@ -145,7 +156,7 @@
 </div>
 </div>
 </div>
-
+</div>
 <%- include('./partials/footer.ejs') %>
 
 <!--<div class="list-group">-->

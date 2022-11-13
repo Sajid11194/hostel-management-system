@@ -8,23 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .navbar{
-            color: #d55a5a;
-            background-color: #222222;
-            position: fixed;
-            left: 0px;
-            right: 0px;
-            top: 0px;
+
         }
 
         .sidebar{
             position: fixed;
-            border-right: 1px solid whitesmoke;
-            left: 0px;
-            top:60px;
+            border: 1px solid whitesmoke;
+            left: 10px;
+            top:70px;
             bottom: 0px;
             width: 250px;
             padding:20px;
             overflow-y: auto;
+            background-color: transparent;
 
         }
 
@@ -58,17 +54,20 @@
 
         .content{
             padding:20px;
-            margin-left: 250px;
-            margin-top: 60px;
+            margin-left: 260px;
+            margin-top: 70px;
         }
 
         main{
-            margin-top: 50px;
+            margin-top: -20px;
+
         }
         .card{
             box-shadow: 2px 5px 2px 0px #ffffff;
             border: #f1eeee 1px solid;
+            background-color: transparent;
         }
+
         .card-header{
             border-bottom: #f1eeee 1px solid;
             background-color: transparent;
@@ -141,6 +140,12 @@
                 position: absolute;
                 z-index: 1;
                 width: 100%;
+            }
+            .sidebar{
+                display: none;
+            }
+            .content{
+                margin-left: 0px;
             }
 
         }

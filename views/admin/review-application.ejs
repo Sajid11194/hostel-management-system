@@ -1,237 +1,263 @@
-<%- include("./partials/header.ejs") %>
+<%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
-
-    <div>
-    <h3>Applicant Info: </h3>
-    <hr class="my-4"/>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" value="<%= application.user.profile.firstName %>" disabled>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" value="<%= application.user.profile.lastName %>" disabled>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <label class="form-label">Email Address</label>
-            <input type="email" class="form-control" value="<%= application.user.email %>" disabled>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" value="<%= application.user.profile.contact.phoneNumber %>" disabled>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <label class="form-label">Gender</label>
-            <select class="form-select" disabled>
-                <option value="male" <% if(application.user.profile.gender == "male") { %>selected
-                        <% }; %>
-                >Male
-                </option>
-                <option value="female" <% if(application.user.profile.gender == "female") { %>selected
-                        <% }; %>
-                >Female
-                </option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" class="form-control" value="<%= application.user.profile.dob %>" disabled>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <label class="form-label">Permanent Address</label>
-            <input type="text" class="form-control" value="<%= application.user.profile.contact.permanentAddress %>"
-                   disabled>
-        </div>
-    </div>
-    </div>
-    <div class="row mt-3">
-
-        <div class="col-lg-4">
-            <h2 class="mt-5">Payment</h2>
-
-            <hr class="my-3">
-            <ul class="list-group fs-5 mt-4">
-                <li class="bg-light list-group-item d-flex justify-content-between align-items-center">
-                    Method
-                    <span class="fw-semibold"><%= application.payment.method %></span>
-                </li>
-                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
-                    Amount
-                    <span class="text-success fw-semibold"><%= application.payment.amount %></span>
-                </li>
-                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
-                    <span style="min-width:60px">Trx ID</span>
-                    <span class="fw-semibold text-break"><%= application.payment.trxId %>
-</span>
-                </li>
-                <li href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <p class="mb-1">Message :</p>
+<main>
+    <%- include('./partials/sidebar.ejs') %>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row mb-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Applicent Info</h5>
                     </div>
-                    <p class="mb-1"><%= application.note %></p>
-                </li>
-            </ul>
-        </div>
-        <div class="col-lg-8 order-md-first">
-            <% if (application.status=="pending") {%>
-            <h2 class="mt-5">Enroll </h2>
-
-            <hr class="my-3">
-            <form action="/admin/applications/review/<%=application._id%>" method="post">
-                <div class="row py-2">
-                    <div class="col-12">
-                        <label class="form-label">Hostel : </label>
-                        <select class="form-control" id="selectHostel">
-                            <option value="" disabled selected>Select Hostel</option>
-
-                        </select>
-                        <script>
-                            $(function () {
-                                const hostelList = $("#selectHostel");
-                                $.ajax({
-                                    type: "POST",
-                                    url: `/admin/hostel/query?getHostels=all`,
-                                    dataType: "json",
-                                    success: function (result) {
-                                        hostelList.find('option').remove()
-                                        hostelList.append('<option value="" disabled selected>Select Hostel</option>')
-                                        result.forEach((item) => {
-                                            var str = `<option value=\"${item._id}\">${item.hostelName}</option>`
-                                            hostelList.append(str)
-                                        })
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-                            });
-                        </script>
-
+                    <div class="card-body">
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control"
+                                       value="<%= application.user.profile.firstName %>" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" value="<%= application.user.profile.lastName %>"
+                                       disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" value="<%= application.user.email %>" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control"
+                                       value="<%= application.user.profile.contact.phoneNumber %>" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" disabled>
+                                    <option value="male" <% if(application.user.profile.gender == "male") { %>selected
+                                            <% }; %>
+                                    >Male
+                                    </option>
+                                    <option value="female"
+                                            <% if(application.user.profile.gender == "female") { %>selected
+                                            <% }; %>
+                                    >Female
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" value="<%= application.user.profile.dob %>"
+                                       disabled>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Permanent Address</label>
+                                <input type="text" class="form-control"
+                                       value="<%= application.user.profile.contact.permanentAddress %>"
+                                       disabled>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="row my-3">
-                    <div class="col-6">
-                        <label class="form-label">Room : </label>
-                        <select class="form-control" id="selectRoom">
-                            <option value="" disabled selected>Select Room</option>
-                        </select>
-                        <script>
-                            $("#selectHostel").change(function () {
-                                const roomList = $("#selectRoom");
-                                $.ajax({
-                                    type: "POST",
-                                    url: `/admin/hostel/query?getRooms=${$(this).val()}`,
-                                    dataType: "json",
-                                    success: function (result) {
-                                        console.log(result)
-                                        roomList.find('option').remove()
-                                        roomList.append('<option value="" disabled selected>Select Room</option>')
-                                        result.forEach((item) => {
-                                            var str = `<option value=\"${item._id}\">${item.roomName}</option>`
-                                            roomList.append(str)
-                                        })
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.log(error)
-                                    }
-                                })
-                            });
-                        </script>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Seat : </label>
-                        <select class="form-control" name="seat" id="selectSeat">
-                            <option value="" disabled selected>Select Seat</option>
-                        </select>
-                        <script>
-                            $("#selectRoom").change(function () {
-                                const seatList = $("#selectSeat");
-                                $.ajax({
-                                    type: "POST",
-                                    url: `/admin/hostel/query?getSeats=${$(this).val()}`,
-                                    dataType: "json",
-                                    success: function (result) {
-                                        console.log(result)
-                                        console.log("Hi")
-                                        seatList.find('option').remove()
-                                        seatList.append('<option value="" disabled selected>Select Seat</option>')
-                                        result.forEach((item) => {
-                                            var str = `<option value=\"${item._id}\">${item.seatName}</option>`
-                                            seatList.append(str)
-                                        })
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.log("Error")
-                                    }
-                                })
-                            });
-                        </script>
-                    </div>
-
-                </div>
-                <div class="row mt-3">
-                    <div class="col-lg-6">
-                <label class="form-label">Package</label>
-                <select class="form-select" name="package" required>
-                    <option value="standard" <% if(application.package == "standard") { %>selected
-                            <% }; %>
-                    >Standard
-                    </option>
-                    <option value="premium" <% if(application.package == "premium") { %>selected
-                            <% }; %>
-                    >Premium
-                    </option>
-                    <option value="luxury" <% if(application.package == "luxury") { %>selected
-                            <% }; %>
-                    >Luxury
-                    </option>
-                </select>
         </div>
-                    <div class="col-lg-6">
-        <label class="form-label">Leave A Message</label>
-        <textarea type="text" class="form-control" name="message"></textarea>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Payment Info</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group fs-5 mt-4">
+                                <li class="bg-light list-group-item d-flex justify-content-between align-items-center">
+                                    Method
+                                    <span class="fw-semibold"><%= application.payment.method %></span>
+                                </li>
+                                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
+                                    Amount
+                                    <span class="text-success fw-semibold"><%= application.payment.amount %></span>
+                                </li>
+                                <li class="bg-light  list-group-item d-flex justify-content-between align-items-center">
+                                    <span style="min-width:60px">Trx ID</span>
+                                    <span class="fw-semibold text-break"><%= application.payment.trxId %></span>
+                                </li>
+                                <li href="#"
+                                    class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <p class="mb-1">Message :</p>
+                                    </div>
+                                    <p class="mb-1"><%= application.note %></p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <label class="form-label">Application Status : </label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" value="accepted" name="applicationStatus" id="applicationStatusAccepted">
-                        <label class="form-check-label" for="applicationStatus">
-                            Accepted
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" value="queued" name="applicationStatus" id="applicationStatusQueued">
-                        <label class="form-check-label" for="applicationStatusQueued">
-                            On Queue
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" value="rejected" name="applicationStatus" id="applicationStatusRejected">
-                        <label class="form-check-label" for="applicationStatusRejected">
-                            Rejected
-                        </label>
-                    </div>
-                </div>
-                <input type="hidden" value="<%= application.user._id%>" name="user">
-                <div class="row my-4 mx-1">
-                    <button type="submit" class="btn bg-gradient btn-success">Update Application</button>
-                </div>
-            </form>
-        </div>
-        <% } else {%>
-        <h3 class="mt-5">Application Status : <%=application.status%></h3>
-        <% } %>
+                <div class="col-lg-8 order-md-first">
+                    <% if (application.status == "pending" || application.status == "queued" ) { %>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Action<h4>
+                            </div>
+                            <div class="card-body">
 
-    </div>
-</div>
-</div></div>
+                                <form action="/admin/applications/review/<%= application._id %>" method="post">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="form-label">Application Status : </label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="accepted" data-bs-show="collapse" data-bs-toggle="collapse" data-bs-target="#assignSeat"
+                                                       name="applicationStatus" id="applicationStatusAccepted">
+                                                <label class="form-check-label" for="applicationStatus">
+                                                    Accepted
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="queued"
+                                                       name="applicationStatus"
+                                                       id="applicationStatusQueued">
+                                                <label class="form-check-label" for="applicationStatusQueued">
+                                                    On Queue
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" value="rejected"
+                                                       name="applicationStatus" id="applicationStatusRejected">
+                                                <label class="form-check-label" for="applicationStatusRejected">
+                                                    Rejected
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row  collapse py-2" id="assignSeat">
+                                        <div class="col-12">
+                                            <label class="form-label">Hostel : </label>
+                                            <select class="form-control" id="selectHostel">
+                                                <option value="" disabled selected>Select Hostel</option>
+
+                                            </select>
+                                            <script>
+                                                $(function () {
+                                                    const hostelList = $("#selectHostel");
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: `/admin/hostel/query?getHostels=all`,
+                                                        dataType: "json",
+                                                        success: function (result) {
+                                                            hostelList.find('option').remove()
+                                                            hostelList.append('<option value="" disabled selected>Select Hostel</option>')
+                                                            result.forEach((item) => {
+                                                                var str = `<option value=\"${item._id}\">${item.hostelName}</option>`
+                                                                hostelList.append(str)
+                                                            })
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.log(error)
+                                                        }
+                                                    })
+                                                });
+                                            </script>
+
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label class="form-label">Room : </label>
+                                            <select class="form-control" id="selectRoom">
+                                                <option value="" disabled selected>Select Room</option>
+                                            </select>
+                                            <script>
+                                                $("#selectHostel").change(function () {
+                                                    const roomList = $("#selectRoom");
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: `/admin/hostel/query?getRooms=${$(this).val()}`,
+                                                        dataType: "json",
+                                                        success: function (result) {
+                                                            console.log(result)
+                                                            roomList.find('option').remove()
+                                                            roomList.append('<option value="" disabled selected>Select Room</option>')
+                                                            result.forEach((item) => {
+                                                                var str = `<option value=\"${item._id}\">${item.roomName}</option>`
+                                                                roomList.append(str)
+                                                            })
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.log(error)
+                                                        }
+                                                    })
+                                                });
+                                            </script>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Seat : </label>
+                                            <select class="form-control" name="seatid" id="selectSeat">
+                                                <option value="" disabled selected>Select Seat</option>
+                                            </select>
+                                            <script>
+                                                $("#selectRoom").change(function () {
+                                                    const seatList = $("#selectSeat");
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: `/admin/hostel/query?getSeats=${$(this).val()}`,
+                                                        dataType: "json",
+                                                        success: function (result) {
+                                                            console.log(result)
+                                                            console.log("Hi")
+                                                            seatList.find('option').remove()
+                                                            seatList.append('<option value="" disabled selected>Select Seat</option>')
+                                                            result.forEach((item) => {
+                                                                var str = `<option value=\"${item._id}\">${item.seatName}</option>`
+                                                                seatList.append(str)
+                                                            })
+                                                        },
+                                                        error: function (xhr, status, error) {
+                                                            console.log("Error")
+                                                        }
+                                                    })
+                                                });
+                                            </script>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <label class="form-label">Package</label>
+                                            <select class="form-select" name="package" required>
+                                                <option value="standard"
+                                                        <% if(application.package == "standard") { %>selected
+                                                        <% }; %>
+                                                >Standard
+                                                </option>
+                                                <option value="premium"
+                                                        <% if(application.package == "premium") { %>selected
+                                                        <% }; %>
+                                                >Premium
+                                                </option>
+                                                <option value="luxury"
+                                                        <% if(application.package == "luxury") { %>selected
+                                                        <% }; %>
+                                                >Luxury
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="form-label">Leave A Message</label>
+                                            <textarea type="text" class="form-control" name="message"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" value="<%= application.user._id %>" name="userid">
+                                    <div class="row my-4 mx-1">
+                                        <button type="submit" class="btn bg-gradient btn-success">Update Application
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                </div>
+                <% } else { %>
+                    <h3 class="mt-5">Application Status : <%= application.status %></h3>
+                <% } %>
+
+            </div>
+        </div>
+
 <%- include("./partials/footer.ejs") %>
