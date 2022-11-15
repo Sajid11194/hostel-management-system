@@ -655,8 +655,11 @@ app.post("/admin/applications/review/:id", (req, res) => {
 //here comes nested callback cancer :p
     if (applicationAction == "accepted") {
         const updateSeatResult = bookSeat(userid, seatid);
+        console.log("LOG 2")
         updateSeatResult.then(()=>{
-        if (updateSeatResult.status == "success") {
+            console.log(updateSeatResult.status)
+
+            if (updateSeatResult.status == "success") {
             Application.findByIdAndUpdate(applicationId, {
                     status: applicationAction,
                     lastSubmitDate: new Date(),
