@@ -142,8 +142,8 @@ app.use(slashes(false));
 // })
 
 
-function bookSeat(userId, seatId) {
-    const query=new Promise((result,error)=>{
+async function bookSeat(userId, seatId) {
+    const query=await new Promise((result,error)=>{
     Seat.findById(seatId, (seatError, seat) => {
         if (seat.onService) {
             if (!seat.resident) {
@@ -656,31 +656,26 @@ app.post("/admin/applications/review/:id", (req, res) => {
     if (applicationAction == "accepted") {
         const updateSeatResult = bookSeat(userid, seatid);
         console.log("LOG 2")
-        updateSeatResult.then(()=>{
-            console.log(updateSeatResult.status)
-
-            if (updateSeatResult.status == "success") {
-            Application.findByIdAndUpdate(applicationId, {
-                    status: applicationAction,
-                    lastSubmitDate: new Date(),
-                    noteFromAdmin: message
-                }
-                , (err, application) => {
-                    if (err || !application) {
-                        req.flash("error", "Could not update application")
-                    } else {
-                        req.flash("success", "Application Accepted")
+        console.log(updateSeatResult)
+        updateSeatResult.then((res)=> {
+            console.log(res.message)
+            if (res.status == "success") {
+                Application.findByIdAndUpdate(applicationId, {
+                        status: applicationAction,
+                        lastSubmitDate: new Date(),
+                        noteFromAdmin: message
                     }
+                    , (err, application) => {
+                        if (err || !application) {
+                            req.flash("error", "Could not update application")
+                        } else {
+                            req.flash("success", "Application Accepted")
+                        }
 
-                })
-        } else {
-            req.flash(updateSeatResult.status, updateSeatResult.message);
-        }
-        //fix promise not returning value
-        return updateSeatResult;
-            console.log(updateSeatResult)
-        let a=`<h1>${updateSeatResult.status}</h1>`
-            res.send(a)
+                    })
+            } else {
+                req.flash(res.status, res.message);
+            }
         })
     } else {
         Application.findByIdAndUpdate(applicationId, {
@@ -693,9 +688,9 @@ app.post("/admin/applications/review/:id", (req, res) => {
                 req.flash("success", `Application Status Set to ${applicationAction}`)
             }
         })
-        res.redirect(req.headers.referer)
 
     }
+    res.redirect(req.headers.referer)
 });
 
 app.get("/admin/user", (req, res) => {
