@@ -651,15 +651,14 @@ app.post("/admin/applications/review/:id", (req, res) => {
     const seatid = req.body.seatid;
     const userid = req.body.userid;
 
-
 //here comes nested callback cancer :p
     if (applicationAction == "accepted") {
         const updateSeatResult = bookSeat(userid, seatid);
         console.log("LOG 2")
         console.log(updateSeatResult)
-        updateSeatResult.then((res)=> {
-            console.log(res.message)
-            if (res.status == "success") {
+        updateSeatResult.then((result)=> {
+            console.log(result.message)
+            if (result.status == "success") {
                 Application.findByIdAndUpdate(applicationId, {
                         status: applicationAction,
                         lastSubmitDate: new Date(),
@@ -674,8 +673,11 @@ app.post("/admin/applications/review/:id", (req, res) => {
 
                     })
             } else {
-                req.flash(res.status, res.message);
+                 console.log("HERE")
+                 req.flash(result.status, result.message);
             }
+            res.redirect(req.headers.referer)
+
         })
     } else {
         Application.findByIdAndUpdate(applicationId, {
@@ -688,9 +690,10 @@ app.post("/admin/applications/review/:id", (req, res) => {
                 req.flash("success", `Application Status Set to ${applicationAction}`)
             }
         })
+        res.redirect(req.headers.referer)
 
     }
-    res.redirect(req.headers.referer)
+
 });
 
 app.get("/admin/user", (req, res) => {
