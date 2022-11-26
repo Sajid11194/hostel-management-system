@@ -1,58 +1,28 @@
-<div class="container-fluid">
-    <nav class="navbar">
-        <div class="container-fluid">
-            <div class="navbar-brand">Lal House</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DIU</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+
+            </ul>
             <% if(global.user != undefined){ %>
                 <div class="d-flex align-items-center ms-auto">
-                    <i class="fa-solid fa-user"></i>
-                    <span class="mx-2"> <%= global.user.username %></span>
+                    <i class="fa-solid fa-user text-primary"></i>
+                    <span class="mx-2 text-primary"> <%= global.user.username %></span>
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="/admin/logout" class="mx-1 text-decoration-none">Logout</a>
+                    <a href="/admin/logout" class="mx-1 text-danger text-decoration-none">Logout</a>
                 </div>
             <% } %>
-            <button class="navbar-toggler d-none" data-bs-toggle="sidebar" data-bs-target="#sidebar"><span
-                        class="navbar-toggler-icon"></span>
-            </button>
         </div>
-    </nav>
-    <div class="row">
-        <div class="col-lg-2 col-md-4 " id="sidebar">
-            <div class="d-flex align-items-center">
-                <i class="fa-3x mx-3 fa-solid fa-user "></i>
-                <div class="mx-2 mt-3">
-                    <a class="text-decoration-none fw-folder" href="http://fb.com">
-                        Farhan Sajid
-                    </a>
-                    <p class="text-success"><%= global.role %></p>
-                </div>
-            </div>
-            <hr>
-            <div class="list-group border-5">
-                <a href="/user" class="list-group-item list-group-item border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Dashboard
-                </a>
-                <a href="/user/profile" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Profile
-                </a>
-                <a href="/user/applications" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> Applications
-                </a>
-                <a href="/user/apply" class="list-group-item  border-0 rounded">
-                    <i class="text-primary fa-solid fa-folder"></i> New Application
-                </a>
-            </div>
-        </div>
-
-        <div class="col-lg-10  col-md-8 mt-3 content p-3 body-content">
-            <% global.success.forEach((message)=>{ %>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <%= message %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <% }) %>
-            <% global.error.forEach((message)=>{ %>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <%= message %>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            <% }) %>
+    </div>
+</nav>

@@ -1,69 +1,69 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
+<main>
+    <%- include('./partials/sidebar.ejs') %>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header"><h5>Applications<h4></div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Hostel
+                            </th>
 
-    <div>
-        <h2 class="display-5 mt-2 mb-3">Hostel Applications </h2>
-    <table class="table">
-        <thead class="table-light">
-        <tr>
-            <th scope="col">Hostel
-            </th>
+                            <th scope="col">Application Date
+                            </th>
+                            <th scope="col">Status
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% applications.forEach((application, i)=>{ %>
+                            <tr>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Hostel : </span><%= application.hostel  %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Application Date : </span><%= application.applicationDate.toDateString() %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Status : </span><%= application.status %></td>
+                            </tr>
+                        <% }) %>
 
-            <th scope="col">Application Date
-            </th>
-            <th scope="col">Status
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <% applications.forEach((application, i)=>{ %>
-            <tr>
-                <td class="text-break"><span
-                            class="d-md-none w-bold">Hostel : </span><%= application.hostel  %></td>
-                <td class="text-break"><span
-                            class="d-md-none w-bold">Application Date : </span><%= application.applicationDate %></td>
-                <td class="text-break"><span
-                            class="d-md-none w-bold">Status : </span><%= application.status %></td>
+                        </tbody>
+
+                    </table>
 
 
 
-            </tr>
-        <% }) %>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            <li class="page-item  <% if(Number(stats.page) <= 1){ %>disabled<% }; %>">
+                                <a class="page-link" href="?p=1">First Page</a>
+                            </li>
+                            <% for(let i = Number(stats.page) - 3;(i < Number(stats.page) + 3) && (i <= stats.totalPage);i++){if (i < 1) continue; %>
+                            <li class="page-item <% if(stats.page == i){ %>active<% }; %>"><a class="page-link"
+                                                                                              href="?p=<%= i %>"><%= i %></a></li>
+                            <% }; %>
 
-        </tbody>
+                            <li class="page-item <% if(stats.page ==stats.totalPage){ %>disabled<% }; %>">
+                                <a class="page-link" href="?p=<%= stats.totalPage %>">Last Page</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
 
-    </table>
+        <%- include('./partials/footer.ejs') %>
 
-
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            <li class="page-item  <% if(Number(stats.page) <= 1){ %>disabled<% }; %>">
-                <a class="page-link" href="?p=1">First Page</a>
-            </li>
-            <% for(let i = Number(stats.page) - 3;(i < Number(stats.page) + 3) && (i <= stats.totalPage);i++){if (i < 1) continue; %>
-            <li class="page-item <% if(stats.page == i){ %>active<% }; %>"><a class="page-link"
-                                                                              href="?p=<%= i %>"><%= i %></a></li>
-            <% }; %>
-
-            <li class="page-item <% if(stats.page ==stats.totalPage){ %>disabled<% }; %>">
-                <a class="page-link" href="?p=<%= stats.totalPage %>">Last Page</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-
-</div>
-</div>
-</div>
-<%- include('./partials/footer.ejs') %>
-
-<!--<div class="list-group">-->
-<!--    -->
-<!--    <a class="list-group-item list-group-item-action " href="#">-->
-<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
-<!--        <p>Hostel :</p>-->
-<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
-<!--            <p class="badge bg-primary">Pending</p></div>-->
-<!--    </a>-->
-<!--</div>-->
+        <!--<div class="list-group">-->
+        <!--    -->
+        <!--    <a class="list-group-item list-group-item-action " href="#">-->
+        <!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
+        <!--        <p>Hostel :</p>-->
+        <!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
+        <!--            <p class="badge bg-primary">Pending</p></div>-->
+        <!--    </a>-->
+        <!--</div>-->

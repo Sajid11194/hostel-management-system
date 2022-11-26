@@ -1,0 +1,116 @@
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(135, 192, 198, 1) 0%, rgba(218, 232, 233, 1) 52%, rgba(135, 192, 198, 1) 100%);
+}
+
+.logo {
+    height: 120px;
+    width: 120px;
+}
+
+.Login-word {
+    font-family: "Ubuntu";
+    font-weight: bold;
+}
+
+.login-box {
+    width: 275px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #7FBCD2;
+}
+
+.computer-logo {
+    height: 90px;
+    width: 90px;
+    padding-left: 100px;
+}
+
+.login-box h1 {
+    font-size: 40px;
+    border-bottom: 3px solid #7FBCD2;
+    margin-bottom: 50px;
+    margin-left: auto;
+    padding: 5px 0;
+    text-align: center;
+
+}
+
+.textbox {
+    width: 100%;
+    overflow-x: hidden;
+    font-size: 20px;
+    padding: 8px 0;
+    margin: 8px 0;
+    border-bottom: 1px solid #7FBCD2;
+}
+
+.textbox i {
+    width: 26px;
+    float: left;
+    text-align: center;
+}
+
+.textbox input {
+    border: none;
+    outline: none;
+    background: none;
+    color: #7FBCD2;
+    font-size: 18px;
+    width: 80%;
+    float: left;
+    margin: 0 10px;
+}
+
+.btn {
+    width: 100%;
+    background: #58adc9;
+    border: 2px solid #58adc9;
+    background-image: -webkit-linear-gradient(top, #58adc9, #58adc9);
+    background-image: -moz-linear-gradient(top, #58adc9, #58adc9);
+    background-image: -ms-linear-gradient(top, #58adc9, #58adc9);
+    background-image: -o-linear-gradient(top, #58adc9, #58adc9);
+    background-image: linear-gradient(to bottom, #58adc9, #58adc9);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    color: #ffffff;
+    padding: 5px;
+    margin-top: 15px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: #312f2f;
+}
+
+a {
+    color: #7FBCD2;
+    background-color: transparent;
+    text-decoration: underline;
+    position: relative;
+    padding: 0px 0px 0px 80px;
+    top: 8px;
+}
+
+a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+@media (max-width: 1096px) {
+    body {
+        background: rgb(2, 0, 36);
+        background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(200, 221, 223, 1) 0%, rgba(224, 238, 240, 1) 52%, rgba(195, 215, 217, 1) 100%);
+    }
+}
+

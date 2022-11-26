@@ -256,8 +256,7 @@ function cancelSeat(userId, seatId) {
 }
 
 app.get('/', (req, res) => {
-    req.flash('success', "XD")
-    res.redirect('/a')
+    res.render("index.ejs")
 })
 
 app.get("/user", (req, res) => {
@@ -355,9 +354,7 @@ app.post("/user/apply", (req, res) => {
     const hostelName = req.body.hostelName;
     const roomName = req.body.roomName;
     const package = req.body.package;
-    const method = req.body.paymentMethod;
-    const amount = req.body.paymentAmount;
-    const trxId = req.body.trxId;
+
     const note = req.body.note;
     const applicationDate = new Date();
     const lastSubmitDate = new Date();
@@ -366,11 +363,7 @@ app.post("/user/apply", (req, res) => {
         user: req.user._id,
         hostel: hostelName,
         package,
-        payment: {
-            method,
-            amount,
-            trxId
-        },
+
         applicationDate,
         lastSubmitDate,
         note
@@ -444,7 +437,9 @@ app.get("/admin/login", (req, res) => {
 
 app.post('/admin/login', passport.authenticate('admin', {
     successRedirect: '/admin',
-    failureRedirect: '/admin/login'
+    failureRedirect: '/admin/login',
+    failureFlash: true,
+    failureFlash: 'Invalid username or password.'
 }), (err, req, res, next) => {
     if (err) next(err);
     res.redirect("/admin");
@@ -466,7 +461,8 @@ app.get("/admin/register", (req, res) => {
     if (!isAdmin(req)) {
         res.render('admin/register');
     } else {
-        res.redirect("/");
+
+        res.redirect("/admin/login");
     }
 });
 
@@ -484,7 +480,6 @@ app.post("/admin/register", (req, res) => {
             res.redirect("/admin/login");
         }
     });
-
 });
 
 app.get("/admin/hostel", (req, res) => {

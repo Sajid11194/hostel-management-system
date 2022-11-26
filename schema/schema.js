@@ -30,11 +30,6 @@ const applicationSchema = new mongoose.Schema({
     },
     package: String,
     hostel: String,
-    payment: {
-        method: String,
-        amount: Number,
-        trxId: String
-    },
     applicationDate: {
         type:Date,
         default:Date.now

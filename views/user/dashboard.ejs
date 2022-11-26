@@ -1,33 +1,93 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
-<section class="dashboard">
-    <h1><%= %></h1>
-<div class="row text-center">
-    <div class="col-lg-3 col-md-6"><div class="alert alert-success"><h3><% if(user.seat){ let details =`Seat : ${user.seat.seatName}<br/>Room : ${user.seat.roomName}<br/>Hostel : ${user.seat.hostelName}`%>
-                <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= details %>">
-                        <%= user.seat.hostelName %>
+<main>
+    <%- include('./partials/sidebar.ejs') %>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row mb-5">
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-muted">
+                                Seat
+                            </div>
+                            <h4>
+                                <% if(user.seat){ let details = `Seat : ${user.seat.seatName} Room : ${user.seat.roomName} Hostel : ${user.seat.hostelName}` %>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= details %>">
+                        <%= user.seat.seatName %>
                     </span>
 
-                <% } else {%>
-                    Unavailable
-                <%}%></h3><hr class="my-2"><p>Seat</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-warning"><h3><%=user.package?user.package:"Unavailable"%></h3><hr class="my-2"><p>Package</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-info"><h3><%=user.balance%></h3><hr class="my-2"><p>Balance</p></div></div>
-    <div class="col-lg-3 col-md-6"><div class="alert alert-secondary"><h3><%=user.applications.length%></h3><hr class="my-2"><p>Applications</p></div></div>
+                                <% } else { %>
+                                    Unavailable
+                                <% } %>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
 
-</div>
-</section>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-muted">
+                                Balance
+                            </div>
+                            <h4><%= user.balance %></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-muted">
+                                Package
+                            </div>
+                            <h4><%= user.package?user.package:"Unavailable" %></h4>
+                        </div>
+                    </div>
+                </div>
 
-</div>
-</div>
-<%- include('./partials/footer.ejs') %>
+                <div class="col-md-3">
+                    <div class="card bg-light">
+                        <div class="card-body text-center">
+                            <div class="text-muted">
+                                Applications
+                            </div>
+                            <h4><%= user.applications.length %></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Pending Applications<h4>
+                        </div>
+                        <div class="card-body">
 
-<!--<div class="list-group">-->
-<!--    -->
-<!--    <a class="list-group-item list-group-item-action " href="#">-->
-<!--        <div class="d-flex justify-content-between"><p>Name : Farhan Sajid</p><p>Gender : Male</p></div>-->
-<!--        <p>Hostel :</p>-->
-<!--        <div class="d-flex justify-content-between text-muted"><p>Application Date : </p>-->
-<!--            <p class="badge bg-primary">Pending</p></div>-->
-<!--    </a>-->
-<!--</div>-->
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Name
+                                    </th>
+                                    <th scope="col">Gender
+                                    </th>
+                                    <th scope="col">Hostel
+                                    </th>
+                                    <th scope="col">Status
+                                    </th>
+                                    <th scope="col" class="text-center w-25">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <%- include('./partials/footer.ejs') %>

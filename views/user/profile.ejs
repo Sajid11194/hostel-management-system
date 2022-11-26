@@ -1,7 +1,14 @@
 <%- include('./partials/header.ejs') %>
 <%- include('./partials/navbar.ejs') %>
-<div class="container">
-    <form class="row g-3 my-5" action="/user/profile" method="post">
+<main>
+    <%- include('./partials/sidebar.ejs') %>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header"><h5>Profile<h4></div>
+                <div class="card-body">
+    <form class="px-1" action="/user/profile" method="post">
+        <div class="row">
         <div class="col-md-6">
             <label class="form-label">First Name</label>
             <input type="text" class="form-control" name="firstName" value="<%= user.profile.firstName %>">
@@ -41,12 +48,14 @@
             <input type="text" class="form-control" name="permanentAddress"
                    value="<%= user.profile.contact.permanentAddress %>">
         </div>
-        <button class="btn btn-success btn-lg" type="submit">Save</button>
+            <div class="col-md-12 mt-3">
+                <button class="btn btn-primary  col-12" type="submit">Save</button>
+            </div>
+        </div>
     </form>
 </div>
 
 
-</div>
 </div>
 </div>
 <%- include('./partials/footer.ejs') %>
