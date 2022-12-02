@@ -17,6 +17,8 @@
                             </th>
                             <th scope="col">Status
                             </th>
+                            <th scope="col">Message From Admin
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -28,6 +30,8 @@
                                             class="d-md-none w-bold">Application Date : </span><%= application.applicationDate.toDateString() %></td>
                                 <td class="text-break"><span
                                             class="d-md-none w-bold">Status : </span><%= application.status %></td>
+                                <td class="text-break"><span
+                                            class="d-md-none w-bold">Message From Admin : </span><%= application.noteFromAdmin %></td>
                             </tr>
                         <% }) %>
 

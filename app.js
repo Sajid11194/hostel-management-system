@@ -20,9 +20,9 @@ const Room = db.Room
 const Seat = db.Seat
 
 //Database Connection
-mongoose.connect("mongodb://localhost:27017/hostelDB");
+mongoose.connect(process.env.DB_LINK);
 const sessionStore = new MongoDBStore({
-    uri: 'mongodb://localhost:27017/hostelDB',
+    uri: process.env.DB_LINK,
     collection: 'session'
 });
 
@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.use(session({
-    secret: 'test gg',
+    secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     store: sessionStore
@@ -72,7 +72,6 @@ passport.use('user', new LocalStrategy((username, password, callback) => {
 }));
 
 passport.serializeUser(function (user, done) {
-    console.log(user)
     done(null, {_id: user.user._id, role: user.role});
 });
 
@@ -345,8 +344,10 @@ app.post("/user/profile", (req, res) => {
 });
 
 app.get("/user/apply", (req, res) => {
+    Hostel.find({gender:req.user.profile.gender},(err,hostels)=>{
+        res.render('user/apply', {user: req.user,hostels:hostels});
+    })
 
-    res.render('user/apply', {user: req.user});
 
 });
 
@@ -376,7 +377,7 @@ app.post("/user/apply", (req, res) => {
                 console.log(err)
                 console.log("updatedUserApplications")
                 console.log(updatedUserApplications)
-                res.redirect("/")
+                res.redirect("/user/applications")
             })
 
         }
@@ -751,6 +752,13 @@ app.get("/admin/logout", (req, res) => {
     })
 
 })
+app.get("/user/logout", (req, res) => {
+    req.logout({}, () => {
+        res.redirect("/user")
+    })
+
+})
+
 
 app.get("/test",(req,res)=>{
     res.send("<div class=\"container\">\n" +

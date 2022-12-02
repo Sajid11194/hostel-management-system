@@ -10,16 +10,14 @@
     <form class="row g-3 my-2 pb-3" action="/user/apply" method="post">
         <div class="col-md-6">
             <label class="form-label">Select Hostel : </label>
+
             <select class="form-select" name="hostelName" required>
-                <option value="male" <% if(user.profile.gender == "male") { %>selected
-                        <% }; %>
-                >Boys Hostel
-                </option>
-                <option value="female" <% if(user.profile.gender == "female") { %>selected
-                        <% }; %>
-                >Girls Hostel
-                </option>
+                <option value="" disabled selected>Select Hostel</option>
+                <% hostels.forEach((hostel)=>{ %>
+                    <option value="<%= hostel.hostelName%>"><%= hostel.hostelName%></option>
+                <% })%>
             </select>
+
         </div>
 
 

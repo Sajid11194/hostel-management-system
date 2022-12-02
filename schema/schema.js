@@ -113,8 +113,8 @@ const hostelSchema = new mongoose.Schema({
     address: String,
     gender: {
         type:String,
-        enum:["MALE","FEMALE"],
-        uppercase:true
+        enum:["male","female"],
+        lowercase:true
     },
     rooms:[{type: mongoose.Schema.Types.ObjectId, ref: 'Room'}]
 });
