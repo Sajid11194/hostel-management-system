@@ -11,8 +11,8 @@ const LocalStrategy = require("passport-local");
 const slashes = require("connect-slashes");
 const db = require("./schema/schema.js");
 const flash = require('connect-flash');
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+// const multer = require("multer");
+// const upload = multer({ dest: "uploads/" });
 //Database Schema
 const Admin = db.Admin
 const User = db.User
