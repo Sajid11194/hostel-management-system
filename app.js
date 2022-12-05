@@ -11,6 +11,7 @@ const LocalStrategy = require("passport-local");
 const slashes = require("connect-slashes");
 const db = require("./schema/schema.js");
 const flash = require('connect-flash');
+const path = require("path");
 // const multer = require("multer");
 // const upload = multer({ dest: "uploads/" });
 //Database Schema
@@ -32,7 +33,7 @@ const sessionStore = new MongoDBStore({
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.use(session({
     secret: process.env.COOKIE_SECRET,
