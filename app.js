@@ -484,7 +484,10 @@ app.post("/admin/register", (req, res) => {
         }
     });
 });
-
+function tt(a,b) {
+    console.log(a)
+}
+app.get("/xd",tt)
 app.get("/admin/hostel", (req, res) => {
     res.render('hostel')
 })
