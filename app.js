@@ -764,28 +764,28 @@ app.get("/user/logout", (req, res) => {
 
 })
 
+//
+// app.get("/test",(req,res)=>{
+//     res.send("<div class=\"container\">\n" +
+//         "        <h1>File Upload</h1>\n" +
+//         "        <form id='form'>\n" +
+//         "            <div class=\"input-group\">\n" +
+//         "                <label for='name'>Your name</label>\n" +
+//         "                <input name='name' id='name' placeholder=\"Enter your name\" />\n" +
+//         "            </div>\n" +
+//         "            <div class=\"input-group\">\n" +
+//         "                <label for='files'>Select files</label>\n" +
+//         "                <input id='files' type=\"file\" multiple>\n" +
+//         "            </div>\n" +
+//         "            <button class=\"submit-btn\" type='submit'>Upload</button>\n" +
+//         "        </form>\n" +
+//         "    </div><script>const form = document.getElementById(\"form\"); form.addEventListener(\"submit\", submitForm); function submitForm(e) { e.preventDefault(); const name = document.getElementById(\"name\"); const files = document.getElementById(\"files\"); const formData = new FormData(); formData.append(\"name\", name.value); for(let i =0; i < files.files.length; i++) { formData.append(\"files\", files.files[i]); } fetch(\"http://localhost:80/test\", { method: 'POST', body: formData }) .then((res) => console.log(res)) .catch((err) => (\"Error occured\", err)); }</script>")
+// })
 
-app.get("/test",(req,res)=>{
-    res.send("<div class=\"container\">\n" +
-        "        <h1>File Upload</h1>\n" +
-        "        <form id='form'>\n" +
-        "            <div class=\"input-group\">\n" +
-        "                <label for='name'>Your name</label>\n" +
-        "                <input name='name' id='name' placeholder=\"Enter your name\" />\n" +
-        "            </div>\n" +
-        "            <div class=\"input-group\">\n" +
-        "                <label for='files'>Select files</label>\n" +
-        "                <input id='files' type=\"file\" multiple>\n" +
-        "            </div>\n" +
-        "            <button class=\"submit-btn\" type='submit'>Upload</button>\n" +
-        "        </form>\n" +
-        "    </div><script>const form = document.getElementById(\"form\"); form.addEventListener(\"submit\", submitForm); function submitForm(e) { e.preventDefault(); const name = document.getElementById(\"name\"); const files = document.getElementById(\"files\"); const formData = new FormData(); formData.append(\"name\", name.value); for(let i =0; i < files.files.length; i++) { formData.append(\"files\", files.files[i]); } fetch(\"http://localhost:80/test\", { method: 'POST', body: formData }) .then((res) => console.log(res)) .catch((err) => (\"Error occured\", err)); }</script>")
-})
-
-app.post("/test", upload.array("files"), uploadFiles);
-
-function uploadFiles(req, res) {
-    console.log(req.body);
-    console.log(req.files);
-    res.json({ message: "Successfully uploaded files" });
-}
+// app.post("/test", upload.array("files"), uploadFiles);
+//
+// function uploadFiles(req, res) {
+//     console.log(req.body);
+//     console.log(req.files);
+//     res.json({ message: "Successfully uploaded files" });
+// }
