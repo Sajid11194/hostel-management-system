@@ -15,10 +15,14 @@
             </ul>
             <% if(global.user != undefined){ %>
                 <div class="d-flex align-items-center ms-auto">
-                    <i class="fa-solid fa-user text-primary"></i>
-                    <span class="mx-2 text-primary"> <%= global.user.username %></span>
+                    <div class="mx-2">
+                    <i class="fa-solid fa-user"></i>
+                    <span> <%= global.user.username %></span>
+                    </div>
+                    <div  class="mx-2">
                     <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="/admin/logout" class="mx-1 text-danger text-decoration-none">Logout</a>
+                    <a href="/admin/logout" class="text-danger text-decoration-none">Logout</a>
+                        </div>
                 </div>
             <% } %>
         </div>

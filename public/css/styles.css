@@ -95,10 +95,7 @@ body {
 a {
     color: #7FBCD2;
     background-color: transparent;
-    text-decoration: underline;
-    position: relative;
-    padding: 0px 0px 0px 80px;
-    top: 8px;
+    text-decoration: none;
 }
 
 a:hover {

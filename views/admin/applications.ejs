@@ -3,6 +3,7 @@
 <main>
     <%- include('./partials/sidebar.ejs') %>
     <div class="content">
+        <%- include('./partials/notification.ejs') %>
         <div class="container-fluid">
     <div class="card">
         <div class="card-header"><h5>Applications<h4></div>
@@ -34,8 +35,7 @@
                             class="d-md-none w-bold">Application Status : </span><%= application.status %></td>
                 <td class="text-break d-flex justify-content-around"><a class="btn bg-gradient btn-primary"
                                                                         href="./applications/review/<%= application._id %>">View</a>
-                    <a class="btn bg-gradient btn-success" href="./applications/review/<%= application._id %>">Accept</a>
-                    <a class="btn bg-gradient btn-danger" href="./applications/review/<%= application._id %>">Reject</a></td>
+
             </tr>
         <% }) %>
 

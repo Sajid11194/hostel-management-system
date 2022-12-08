@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log(process.env.TEST)
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -39,7 +38,7 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(session({
     secret: process.env.COOKIE_SECRET,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: sessionStore
 }));
 
@@ -111,10 +110,13 @@ app.use((req, res, next) => {
         path: req.path,
         success: req.flash('success'),
         error: req.flash('error')
+
     };
 
     next()
 })
+
+
 app.use(/^[\/]admin($|\/)(?!login)(?!register).*/, (req, res, next) => {
     if (isAdmin(req)) {
         next();
@@ -146,51 +148,54 @@ app.use(slashes(false));
 
 
 async function bookSeat(userId, seatId) {
-    const query=await new Promise((result,error)=>{
-    Seat.findById(seatId, (seatError, seat) => {
-        if (seat.onService) {
-            if (!seat.resident) {
-                User.findById(userId, (errUser, user) => {
-                    if (errUser || !user) {
-                        result({status: "error", message: "Could not update user"});
-                    } else {
-                        if (user.seat) {
-                            result({status: "error", message: "User already assigned to a seat"});
+    const query = await new Promise((result, error) => {
+        Seat.findById(seatId, (seatError, seat) => {
+            if (seat.onService) {
+                if (!seat.resident) {
+                    User.findById(userId, (errUser, user) => {
+                        if (errUser || !user) {
+                            result({status: "error", message: "Could not update user"});
                         } else {
-                            user.seat = seatId
-                            user.save((errUserSave, savedUser) => {
-                                if (errUserSave) {
-                                    result({status: "error", message: "Could not save user info,try again."});
-                                } else {
-                                    seat.resident = savedUser._id
-                                    seat.save((errSeatSave, savedSeat) => {
-                                        if (errSeatSave) {
-                                            result({status: "error", message: "Could not save seat info,try again."});
-                                        } else {
-                                            result({status: "success", message: "Seat booked."});
-                                        }
-                                    })
-                                }
-                            })
+                            if (user.seat) {
+                                result({status: "error", message: "User already assigned to a seat"});
+                            } else {
+                                user.seat = seatId
+                                user.save((errUserSave, savedUser) => {
+                                    if (errUserSave) {
+                                        result({status: "error", message: "Could not save user info,try again."});
+                                    } else {
+                                        seat.resident = savedUser._id
+                                        seat.save((errSeatSave, savedSeat) => {
+                                            if (errSeatSave) {
+                                                result({
+                                                    status: "error",
+                                                    message: "Could not save seat info,try again."
+                                                });
+                                            } else {
+                                                result({status: "success", message: "Seat booked."});
+                                            }
+                                        })
+                                    }
+                                })
+                            }
                         }
-                    }
-                })
+                    })
 
+                } else {
+                    result({status: "error", message: "Seat already occupied"});
+                }
             } else {
-                result({status: "error", message: "Seat already occupied"});
-            }
-        } else {
-            result({status: "error", message: "Seat is not on Service"});
+                result({status: "error", message: "Seat is not on Service"});
 
-        }
-    })
+            }
+        })
     })
     return query;
 }
 
 
 function cancelSeat(userId, seatId) {
-    const query=new Promise((result,fail)=>{
+    const query = new Promise((result, fail) => {
         if (userId == undefined && seatId == undefined) {
             result({status: "error", message: "Invalid user or seat"})
         } else if (userId) {
@@ -213,7 +218,6 @@ function cancelSeat(userId, seatId) {
                                             console.log(errSaveUser)
                                             result({status: "error", message: "Error Updating User"})
                                         } else {
-                                            console.log("HH")
                                             result({status: "success", message: "Successfully Canceled Seat"})
                                         }
                                     })
@@ -254,7 +258,8 @@ function cancelSeat(userId, seatId) {
             })
         } else {
             result({status: "error", message: "Invalid user or seat"})
-        }})
+        }
+    })
     return query;
 }
 
@@ -338,9 +343,9 @@ app.post("/user/profile", (req, res) => {
 
     }, (err, user) => {
         if (err) {
-            req.flash("error",error)
+            req.flash("error", error)
         } else {
-            req.flash("success","Profile Saved")
+            req.flash("success", "Profile Saved")
             res.redirect("/user/profile")
         }
     });
@@ -348,8 +353,8 @@ app.post("/user/profile", (req, res) => {
 });
 
 app.get("/user/apply", (req, res) => {
-    Hostel.find({gender:req.user.profile.gender},(err,hostels)=>{
-        res.render('user/apply', {user: req.user,hostels:hostels});
+    Hostel.find({gender: req.user.profile.gender}, (err, hostels) => {
+        res.render('user/apply', {user: req.user, hostels: hostels});
     })
 
 
@@ -425,8 +430,8 @@ app.listen(80, () => {
 app.get("/admin", (req, res) => {
     //testing if running query in parallel will reduce time or not
 
-    Promise.all([Application.find({status: "pending"}).sort({_1: 1}).limit(5).populate('user'), Application.count(), User.count(), Seat.count(), Seat.count({resident: null})]).then(([applications, appCount, userCount, seatCount, emptySeatCount]) => {
-        const values = {applications, stats: {appCount, userCount, seatCount, emptySeatCount}}
+    Promise.all([Seat.find({resident: {$ne: null}}).sort({_1: 1}).populate('resident'), Application.count(), User.count(), Seat.count(), Seat.count({resident: null})]).then(([seats, appCount, userCount, seatCount, emptySeatCount]) => {
+        const values = {seats, stats: {appCount, userCount, seatCount, emptySeatCount}}
         res.render('admin/dashboard', values);
     });
 });
@@ -486,10 +491,12 @@ app.post("/admin/register", (req, res) => {
         }
     });
 });
-function tt(a,b) {
+
+function tt(a, b) {
     console.log(a)
 }
-app.get("/xd",tt)
+
+app.get("/xd", tt)
 app.get("/admin/hostel", (req, res) => {
     res.render('hostel')
 })
@@ -653,19 +660,17 @@ app.post("/admin/applications/review/:id", (req, res) => {
     const package = req.body.package;
     const seatid = req.body.seatid;
     const userid = req.body.userid;
-
+    console.log(package)
 //here comes nested callback cancer :p
     if (applicationAction == "accepted") {
         const updateSeatResult = bookSeat(userid, seatid);
-        console.log("LOG 2")
-        console.log(updateSeatResult)
-        updateSeatResult.then((result)=> {
-            console.log(result.message)
+        updateSeatResult.then((result) => {
             if (result.status == "success") {
                 Application.findByIdAndUpdate(applicationId, {
                         status: applicationAction,
                         lastSubmitDate: new Date(),
-                        noteFromAdmin: message
+                        noteFromAdmin: message,
+                        package
                     }
                     , (err, application) => {
                         if (err || !application) {
@@ -676,8 +681,7 @@ app.post("/admin/applications/review/:id", (req, res) => {
 
                     })
             } else {
-                 console.log("HERE")
-                 req.flash(result.status, result.message);
+                req.flash(result.status, result.message);
             }
             res.redirect(req.headers.referer)
 
@@ -738,17 +742,44 @@ app.get("/admin/user/review/:userid", (req, res) => {
 
 })
 
+
+app.post("/admin/user/:userid/add-balance", (req, res) => {
+    User.findByIdAndUpdate(req.params.userid, {$inc: {'balance': req.body.amount}}).exec((err, user) => {
+        if (err || !user) {
+            req.flash('error', 'User not found')
+        } else {
+            req.flash('success', 'Balance Added')
+
+            res.redirect(req.headers.referer)
+
+        }
+    })
+
+})
+app.post("/admin/user/:userid/change-package", (req, res) => {
+    User.findByIdAndUpdate(req.params.userid, {'package': req.body.package}).exec((err, user) => {
+        if (err || !user) {
+            req.flash('error', 'User not found')
+        } else {
+
+            req.flash('success', 'Package Updated')
+
+            res.redirect(req.headers.referer)
+        }
+    })
+
+})
 app.post("/admin/book-seat", (req, res) => {
     console.log(req.path);
-    bookSeat(req.body.user, req.body.seat).then((result)=>{
-        req.flash(result.status,result.message)
+    bookSeat(req.body.user, req.body.seat).then((result) => {
+        req.flash(result.status, result.message)
         res.redirect(req.headers.referer)
     });
 })
 app.post("/admin/cancel-seat", async (req, res) => {
     console.log(req.body);
-    cancelSeat(req.body.userId, req.body.seatId).then((result)=>{
-        req.flash(result.status,result.message)
+    cancelSeat(req.body.userId, req.body.seatId).then((result) => {
+        req.flash(result.status, result.message)
         res.redirect(req.headers.referer)
     });
 
